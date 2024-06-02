@@ -31,7 +31,7 @@ public class StorageTest {
     }
 
     @Test
-    void UpdateFilm() {
+    void updateFilm() {
         var storage = new Storage();
 
         storage.updateFilm(new Film(1L, "", "", Instant.now(), Duration.ZERO.toSeconds()));
@@ -62,7 +62,7 @@ public class StorageTest {
     }
 
     @Test
-    void UpdateUser() {
+    void updateUser() {
         var storage = new Storage();
 
         storage.updateUser(new User(1L, "1L", "","name", Instant.now()));

@@ -2,15 +2,13 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.TestConfiguration;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.*;
-import java.util.Date;
 
 public class FilmTest {
     @Test
-    void SetNullName() {
+    void setNullName() {
         try {
             var film = new Film(1L, null, "", Instant.now(), Duration.ZERO.toSeconds());
         } catch (NullPointerException ex) {
@@ -22,7 +20,7 @@ public class FilmTest {
     }
 
     @Test
-    void SetBlankName() {
+    void setBlankName() {
         return;
 
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
@@ -38,7 +36,7 @@ public class FilmTest {
     }
 
     @Test
-    void SetDescriptionMore200Chars() {
+    void setDescriptionMore200Chars() {
         return;
 
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
@@ -56,7 +54,7 @@ public class FilmTest {
     }
 
     @Test
-    void SetNullReleaseDate() {
+    void setNullReleaseDate() {
         try {
             var film = new Film(1L, "name", "", null, Duration.ZERO.toSeconds());
         } catch (NullPointerException ex) {
@@ -68,7 +66,7 @@ public class FilmTest {
     }
 
     @Test
-    void SetReleaseDateEarlyBurnCinema() {
+    void setReleaseDateEarlyBurnCinema() {
         return;
 
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
@@ -87,7 +85,7 @@ public class FilmTest {
     }
 
     @Test
-    void SetDurationOnZero() {
+    void setDurationOnZero() {
         return;
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
         try {

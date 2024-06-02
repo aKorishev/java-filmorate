@@ -8,10 +8,11 @@ import ru.yandex.practicum.filmorate.model.Storage;
 
 import java.time.Duration;
 import java.time.Instant;
+
 public class FilmControllerTests {
 
     @Test
-    void GetFilm() throws Exception {
+    void getFilm() throws Exception {
         var storage = new Storage();
         var controller = new FilmController(storage);
 
@@ -27,7 +28,7 @@ public class FilmControllerTests {
     }
 
     @Test
-    void GetFilms() {
+    void getFilms() {
         var storage = new Storage();
         var controller = new FilmController(storage);
 
@@ -39,7 +40,7 @@ public class FilmControllerTests {
     }
 
     @Test
-    void AddFilm() {
+    void addFilm() {
         var storage = new Storage();
         var controller = new FilmController(storage);
 
@@ -53,7 +54,7 @@ public class FilmControllerTests {
     }
 
     @Test
-    void UpdateFilm() throws Exception {
+    void updateFilm() throws Exception {
         var storage = new Storage();
         var controller = new FilmController(storage);
 

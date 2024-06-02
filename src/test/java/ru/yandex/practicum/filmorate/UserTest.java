@@ -2,14 +2,13 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.*;
 
 public class UserTest {
     @Test
-    void SetNullEmail() {
+    void setNullEmail() {
         try {
             var user = new User(1L, null, "", "", Instant.now());
         } catch (NullPointerException ex) {
@@ -21,7 +20,7 @@ public class UserTest {
     }
 
     @Test
-    void SetEmailWithoutSeparate() {
+    void setEmailWithoutSeparate() {
         return;
 
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
@@ -38,7 +37,7 @@ public class UserTest {
     }
 
     @Test
-    void SetEmailNotFormat() {
+    void setEmailNotFormat() {
         return;
 
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
@@ -60,7 +59,7 @@ public class UserTest {
     }
 
     @Test
-    void SetEmailFormat() {
+    void setEmailFormat() {
         var description = "s".repeat(201);
 
         try {
@@ -75,7 +74,7 @@ public class UserTest {
     }
 
     @Test
-    void SetNullLogin() {
+    void setNullLogin() {
         try {
             var user = new User(1L, "sf@email.ru", null, "", Instant.now());
         } catch (NullPointerException ex) {
@@ -87,7 +86,7 @@ public class UserTest {
     }
 
     @Test
-    void SetBlankLogin() {
+    void setBlankLogin() {
         return;
 
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
@@ -104,7 +103,7 @@ public class UserTest {
     }
 
     @Test
-    void SetNullName() {
+    void setNullName() {
         try {
             var user = new User(1L, "sf@email.ru", "login", null, Instant.now());
 
@@ -120,7 +119,7 @@ public class UserTest {
     }
 
     @Test
-    void SetBlankName() {
+    void setBlankName() {
         try {
             var user = new User(1L, "sf@email.ru", "login", "  ", Instant.now());
 
@@ -135,7 +134,7 @@ public class UserTest {
     }
 
     @Test
-    void SetFutureBirthDay() {
+    void setFutureBirthDay() {
         return;
 
 /* Не работает. Настивник сказал, что эта тема будет разбираться позднее
