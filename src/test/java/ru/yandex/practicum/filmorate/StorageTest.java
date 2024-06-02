@@ -41,6 +41,7 @@ public class StorageTest {
 
         Assertions.assertEquals("test", storage.getFilm(2L).getName());
     }
+
     @Test
     void addUser() {
         var storage = new Storage();
