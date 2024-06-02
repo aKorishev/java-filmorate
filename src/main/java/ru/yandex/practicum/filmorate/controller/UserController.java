@@ -12,12 +12,12 @@ import java.util.List;
 public class UserController {
     private final Storage storage;
 
-    public UserController(Storage storage){
+    public UserController(Storage storage) {
         this.storage = storage;
     }
 
     @GetMapping
-    public @ResponseBody List<User> getUsers(){
+    public @ResponseBody List<User> getUsers() {
         return List.copyOf(storage.getUsers().values());
     }
 

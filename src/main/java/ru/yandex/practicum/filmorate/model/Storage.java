@@ -3,9 +3,6 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +26,7 @@ public class Storage {
         if (containsFilm(id)) {
             films.replace(id, film);
             log.debug("Updated film id = " + id);
-        }
-        else {
+        } else {
             films.put(id, film);
             log.debug("Putted film id = " + id);
         }
@@ -40,7 +36,7 @@ public class Storage {
         return films.containsKey(id);
     }
 
-    public Film getFilm (Long id) {
+    public Film getFilm(Long id) {
         return films.get(id);
     }
 
@@ -50,8 +46,7 @@ public class Storage {
         if (containsFilm(id)) {
             users.replace(id, user);
             log.debug("Updated user id = " + id);
-        }
-        else {
+        } else {
             users.put(id, user);
             log.debug("Putted user id = " + id);
         }
@@ -61,7 +56,7 @@ public class Storage {
         return users.containsKey(id);
     }
 
-    public User getUser (Long id) {
+    public User getUser(Long id) {
         return users.get(id);
     }
 }

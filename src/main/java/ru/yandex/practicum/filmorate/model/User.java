@@ -26,7 +26,7 @@ public class User {
     @BirthDateUserConstraint
     Instant birthDay;
 
-    public String getName (){
+    public String getName() {
         if (name == null || name.isBlank())
             return login;
 

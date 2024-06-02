@@ -7,7 +7,7 @@ import java.time.Instant;
 
 public class BirthDateUserValidator implements ConstraintValidator<BirthDateUserConstraint, Instant> {
     @Override
-    public void initialize(BirthDateUserConstraint BirthDate) {
+    public void initialize(BirthDateUserConstraint birthDate) {
 
     }
 
