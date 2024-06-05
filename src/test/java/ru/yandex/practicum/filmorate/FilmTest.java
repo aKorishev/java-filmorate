@@ -13,6 +13,7 @@ public class FilmTest {
     private final Validator validator =
             Validation.buildDefaultValidatorFactory()
                 .getValidator();
+
     @Test
     void setNullName() {
         var film = new Film(1L, null, "", LocalDate.now(), 1L);

@@ -15,6 +15,7 @@ public class UserTest {
     private final Validator validator =
             Validation.buildDefaultValidatorFactory()
                     .getValidator();
+
     @Test
     void setNullEmail() {
         var user = new User(1L, null, "login", "", LocalDate.now().minusDays(1));
