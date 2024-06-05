@@ -20,16 +20,29 @@ public class Storage {
         return Map.copyOf(users);
     }
 
-    public void updateFilm(Film film) {
+    public Film updateFilm(Film film) {
         var id = film.getId();
 
-        if (containsFilm(id)) {
+        if (id != 0 && containsFilm(id)) {
             films.replace(id, film);
             log.debug("Updated film id = " + id);
         } else {
+            if (id == 0) {
+                id = films.keySet().stream().max(Long::compareTo).orElse(0L) + 1;
+
+                film = new Film(id,
+                        film.getName(),
+                        film.getDescription(),
+                        film.getReleaseDate(),
+                        film.getDuration());
+            }
+
             films.put(id, film);
+
             log.debug("Putted film id = " + id);
         }
+
+        return film;
     }
 
     public boolean containsFilm(Long id) {
@@ -40,16 +53,28 @@ public class Storage {
         return films.get(id);
     }
 
-    public void updateUser(User user) {
+    public User updateUser(User user) {
         var id = user.getId();
 
-        if (containsFilm(id)) {
+        if (id != 0 && containsFilm(id)) {
             users.replace(id, user);
             log.debug("Updated user id = " + id);
         } else {
+            if (id == 0) {
+                id = users.keySet().stream().max(Long::compareTo).orElse(0L) + 1;
+
+                user = new User(id,
+                        user.getEmail(),
+                        user.getLogin(),
+                        user.getName(),
+                        user.getBirthday());
+            }
+
             users.put(id, user);
             log.debug("Putted user id = " + id);
         }
+
+        return user;
     }
 
     public boolean containsUser(Long id) {

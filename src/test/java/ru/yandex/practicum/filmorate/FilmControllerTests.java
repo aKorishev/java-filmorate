@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Storage;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 
 public class FilmControllerTests {
 
@@ -16,11 +17,11 @@ public class FilmControllerTests {
         var storage = new Storage();
         var controller = new FilmController(storage);
 
-        var expectedFilm = new Film(2L, "2L", "", Instant.now(), Duration.ZERO.toSeconds());
+        var expectedFilm = new Film(2L, "2L", "", LocalDate.now(), Duration.ZERO.toSeconds());
 
-        storage.updateFilm(new Film(1L, "1L", "", Instant.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(1L, "1L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
         storage.updateFilm(expectedFilm);
-        storage.updateFilm(new Film(3L, "3L", "", Instant.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(3L, "3L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
 
         var actualFilm = controller.getFilm(2L);
 
@@ -32,9 +33,9 @@ public class FilmControllerTests {
         var storage = new Storage();
         var controller = new FilmController(storage);
 
-        storage.updateFilm(new Film(1L, "1L", "", Instant.now(), Duration.ZERO.toSeconds()));
-        storage.updateFilm(new Film(2L, "2L", "", Instant.now(), Duration.ZERO.toSeconds()));
-        storage.updateFilm(new Film(3L, "3L", "", Instant.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(1L, "1L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(2L, "2L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(3L, "3L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
 
         Assertions.assertEquals(3, controller.getFilms().size());
     }
@@ -44,11 +45,11 @@ public class FilmControllerTests {
         var storage = new Storage();
         var controller = new FilmController(storage);
 
-        storage.updateFilm(new Film(1L, "1L", "", Instant.now(), Duration.ZERO.toSeconds()));
-        storage.updateFilm(new Film(2L, "2L", "", Instant.now(), Duration.ZERO.toSeconds()));
-        storage.updateFilm(new Film(3L, "3L", "", Instant.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(1L, "1L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(2L, "2L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(3L, "3L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
 
-        controller.updateFilm(new Film(4L, "4L", "", Instant.now(), Duration.ZERO.toSeconds()));
+        controller.updateFilm(new Film(4L, "4L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
 
         Assertions.assertEquals(4, controller.getFilms().size());
     }
@@ -58,11 +59,11 @@ public class FilmControllerTests {
         var storage = new Storage();
         var controller = new FilmController(storage);
 
-        storage.updateFilm(new Film(1L, "1L", "", Instant.now(), Duration.ZERO.toSeconds()));
-        storage.updateFilm(new Film(2L, "2L", "", Instant.now(), Duration.ZERO.toSeconds()));
-        storage.updateFilm(new Film(3L, "3L", "", Instant.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(1L, "1L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(2L, "2L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
+        storage.updateFilm(new Film(3L, "3L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
 
-        controller.updateFilm(new Film(2L, "10L", "", Instant.now(), Duration.ZERO.toSeconds()));
+        controller.updateFilm(new Film(2L, "10L", "", LocalDate.now(), Duration.ZERO.toSeconds()));
 
         Assertions.assertEquals("10L", controller.getFilm(2L).getName());
     }

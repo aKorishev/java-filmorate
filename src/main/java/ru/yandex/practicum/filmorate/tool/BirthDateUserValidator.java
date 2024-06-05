@@ -3,17 +3,16 @@ package ru.yandex.practicum.filmorate.tool;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
-public class BirthDateUserValidator implements ConstraintValidator<BirthDateUserConstraint, Instant> {
+public class BirthDateUserValidator implements ConstraintValidator<BirthDateUserConstraint, LocalDate> {
     @Override
     public void initialize(BirthDateUserConstraint birthDate) {
 
     }
 
     @Override
-    public boolean isValid(Instant value, ConstraintValidatorContext constraintValidatorContext) {
-        return false;
-        //return !value.isAfter(Instant.now());
+    public boolean isValid(LocalDate value, ConstraintValidatorContext constraintValidatorContext) {
+        return !value.isAfter(LocalDate.now());
     }
 }

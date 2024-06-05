@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody User getUser(@Valid @RequestBody long id) throws Exception {
+    public @ResponseBody User getUser(@PathVariable long id) throws Exception {
         var users = storage.getUsers();
 
         if (users.containsKey(id))
@@ -33,8 +33,12 @@ public class UserController {
 
     @PostMapping
     public @ResponseBody User updateUser(@Valid @RequestBody User user) {
-        storage.updateUser(user);
+        return storage.updateUser(user);
+    }
 
+    @PutMapping
+    public @ResponseBody User putUser(@Valid @RequestBody User user) {
+        storage.updateUser(user);
         return user;
     }
 }

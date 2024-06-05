@@ -1,82 +1,141 @@
 package ru.yandex.practicum.filmorate;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.util.stream.Collectors;
+
 
 public class UserTest {
+    private final Validator validator =
+            Validation.buildDefaultValidatorFactory()
+                    .getValidator();
     @Test
     void setNullEmail() {
-        try {
-            var user = new User(1L, null, "", "", Instant.now());
-        } catch (NullPointerException ex) {
-            if (ex.getMessage().equals("email is marked non-null but is null"))
-                return;
-        }
+        var user = new User(1L, null, "login", "", LocalDate.now().minusDays(1));
 
-        Assertions.fail();
+        var validMessages = validator.validate(user);
+
+        Assertions.assertEquals(1, validMessages.size());
+
+        Assertions.assertEquals(
+                "must not be blank",
+                validMessages
+                        .stream().findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(""));
     }
 
     @Test
-    void setEmailWithoutSeparate() {
-        return;
+    void setBlankEmail() {
+        var user = new User(1L, "   ", "login", "", LocalDate.now().minusDays(1));
 
-/* Не работает. Настивник сказал, что эта тема будет разбираться позднее
-        try {
-            var user = new User(1L, "email", "", "", Instant.now());
-        } catch (NullPointerException ex) {
-            var a = 0;
-            //return;
-        }
+        var validMessages = validator.validate(user);
 
-        Assertions.fail();
+        validMessages = validMessages
+                .stream()
+                .filter(i -> !i.getMessage().equals("must not be blank"))
+                .filter(i -> !i.getMessage().equals("must be a well-formed email address"))
+                .collect(Collectors.toSet());
 
- */
+        Assertions.assertEquals(0, validMessages.size());
     }
 
     @Test
     void setEmailNotFormat() {
-        return;
+        var validMessages = validator.validate(
+                new User(1L, "email", "login", "", LocalDate.now().minusDays(1)));
 
-/* Не работает. Настивник сказал, что эта тема будет разбираться позднее
-        var description = "s".repeat(201);
+        Assertions.assertEquals(1, validMessages.size());
 
-        try {
-            var user = new User(1L, "@email", "", "", Instant.now());
-            user = new User(1L, "dfgd@email", "", "", Instant.now());
-            user = new User(1L, "dfgd@email.", "", "", Instant.now());
-            user = new User(1L, "dfgd@.email", "", "", Instant.now());
-            user = new User(1L, "dfgd@email.rt.", "", "", Instant.now());
-        } catch (Exception ex) {
-           // return;
-        }
+        Assertions.assertEquals(
+                "must be a well-formed email address",
+                validMessages
+                        .stream().findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(""));
 
-        Assertions.fail();
+        validMessages = validator.validate(
+                        new User(1L, "dfgd.email", "login", "", LocalDate.now().minusDays(1)));
+        validMessages = validator.validate(
+                new User(1L, "@email", "login", "", LocalDate.now().minusDays(1)));
 
- */
+        Assertions.assertEquals(1, validMessages.size());
+
+        Assertions.assertEquals(
+                "must be a well-formed email address",
+                validMessages
+                        .stream().findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(""));
+
+        validMessages = validator.validate(
+                new User(1L, "dfgd.email", "login", "", LocalDate.now().minusDays(1)));
+
+        Assertions.assertEquals(1, validMessages.size());
+
+        Assertions.assertEquals(
+                "must be a well-formed email address",
+                validMessages
+                        .stream().findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(""));
+
+        validMessages = validator.validate(
+                        new User(1L, "dfgd@email.", "login", "", LocalDate.now().minusDays(1)));
+
+        Assertions.assertEquals(1, validMessages.size());
+
+        Assertions.assertEquals(
+                "must be a well-formed email address",
+                validMessages
+                        .stream().findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(""));
+
+        validMessages = validator.validate(
+                        new User(1L, "dfgd@.email", "login", "", LocalDate.now().minusDays(1)));
+
+        Assertions.assertEquals(1, validMessages.size());
+
+        Assertions.assertEquals(
+                "must be a well-formed email address",
+                validMessages
+                        .stream().findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(""));
+
+        validMessages = validator.validate(
+                        new User(1L, "dfgd@email.tr.", "login", "", LocalDate.now().minusDays(1)));
+
+        Assertions.assertEquals(1, validMessages.size());
+
+        Assertions.assertEquals(
+                "must be a well-formed email address",
+                validMessages
+                        .stream().findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(""));
     }
 
     @Test
     void setEmailFormat() {
-        var description = "s".repeat(201);
+        var validMessages = validator.validate(
+                new User(1L, "dfgd@email.ru", "login", "", LocalDate.now().minusDays(1)));
 
-        try {
-            var user = new User(1L, "sf@email.ru", "", "", Instant.now());
-
-            return;
-        } catch (Exception ex) {
-            // return;
-        }
-
-        Assertions.fail();
+        Assertions.assertEquals(0, validMessages.size());
     }
 
     @Test
     void setNullLogin() {
         try {
-            var user = new User(1L, "sf@email.ru", null, "", Instant.now());
+            var user = new User(1L, "sf@email.ru", null, "", LocalDate.now().minusDays(1));
         } catch (NullPointerException ex) {
             if (ex.getMessage().equals("login is marked non-null but is null"))
                 return;
@@ -87,68 +146,43 @@ public class UserTest {
 
     @Test
     void setBlankLogin() {
-        return;
+        var user = new User(1L, "sf@email.ru", "   ", "", LocalDate.now().minusDays(1));
 
-/* Не работает. Настивник сказал, что эта тема будет разбираться позднее
-        try {
-            var user = new User(1L, "sf@email.ru", "   ", "", Instant.now());
-        } catch (NullPointerException ex) {
-            if (ex.getMessage().equals("login is marked not blank"))
-                return;
-        }
+        var validMessages = validator.validate(user);
 
-        Assertions.fail();
+        validMessages = validMessages
+                .stream()
+                .filter(i -> !(i.getMessage().equals("must not be blank") && i.getPropertyPath().toString().equals("login")))
+                .collect(Collectors.toSet());
 
- */
+        Assertions.assertEquals(0, validMessages.size());
     }
 
     @Test
     void setNullName() {
-        try {
-            var user = new User(1L, "sf@email.ru", "login", null, Instant.now());
+        var user = new User(1L, "sf@email.ru", "login", null, LocalDate.now().minusDays(1));
 
-            var name = user.getName();
-            Assertions.assertEquals("login", name);
-
-            return;
-        } catch (Exception ignored) {
-
-        }
-
-        Assertions.fail();
+        Assertions.assertEquals("login", user.getName());
     }
 
     @Test
     void setBlankName() {
-        try {
-            var user = new User(1L, "sf@email.ru", "login", "  ", Instant.now());
+        var user = new User(1L, "sf@email.ru", "login", "  ", LocalDate.now().minusDays(1));
 
-            Assertions.assertEquals("login", user.getName());
-
-            return;
-        } catch (NullPointerException ignored) {
-
-        }
-
-        Assertions.fail();
+        Assertions.assertEquals("login", user.getName());
     }
 
     @Test
     void setFutureBirthDay() {
-        return;
+        var user = new User(1L, "sf@email.ru", "login", "", LocalDate.now().plusDays(1));
 
-/* Не работает. Настивник сказал, что эта тема будет разбираться позднее
-        try {
-            var localDateTime = LocalDateTime.of(2980,1,1,0,0);
-            var instant = ZonedDateTime.of(localDateTime, ZoneOffset.ofHours(0)).toInstant();
-            var user = new User(1L, "sf@email.ru", "login", "", instant);
-        } catch (NullPointerException ex) {
-            if (ex.getMessage().equals("releaseDate is marked non-null but is null"))
-                return;
-        }
+        var validMessages = validator.validate(user);
 
-        Assertions.fail();
+        validMessages = validMessages
+                .stream()
+                .filter(i -> !(i.getMessage().equals("Дата рождения не может быть в будущем") && i.getPropertyPath().toString().equals("birthDay")))
+                .collect(Collectors.toSet());
 
- */
+        Assertions.assertEquals(0, validMessages.size());
     }
 }

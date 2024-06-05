@@ -3,15 +3,14 @@ package ru.yandex.practicum.filmorate.tool;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
 
-public class ReleaseDateFilmValidator implements ConstraintValidator<ReleaseDateFilmConstraint, Instant> {
+public class ReleaseDateFilmValidator implements ConstraintValidator<ReleaseDateFilmConstraint, LocalDate> {
 
     @Override
-    public boolean isValid(Instant value, ConstraintValidatorContext constraintValidatorContext) {
-        var minDate =  new Date(1985,12,28).toInstant();
-        return !minDate.isBefore(value);
+    public boolean isValid(LocalDate value, ConstraintValidatorContext constraintValidatorContext) {
+        var minDate = LocalDate.of(1895,12,28);
+        return !value.isBefore(minDate);
     }
 }
 

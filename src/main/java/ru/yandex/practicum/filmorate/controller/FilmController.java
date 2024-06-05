@@ -22,7 +22,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody Film getFilm(@Valid @RequestBody long id) throws Exception {
+    public @ResponseBody Film getFilm(@PathVariable long id) throws Exception {
         var films = storage.getFilms();
 
         if (films.containsKey(id))
@@ -33,8 +33,12 @@ public class FilmController {
 
     @PostMapping
     public @ResponseBody Film updateFilm(@Valid @RequestBody Film film) {
-        storage.updateFilm(film);
+        return storage.updateFilm(film);
+    }
 
+    @PutMapping
+    public @ResponseBody Film putFilm(@Valid @RequestBody Film film) {
+        storage.updateFilm(film);
         return film;
     }
 }
