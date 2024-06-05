@@ -5,7 +5,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -63,6 +62,9 @@ public class UserTest {
 
         validMessages = validator.validate(
                         new User(1L, "dfgd.email", "login", "", LocalDate.now().minusDays(1)));
+
+        Assertions.assertEquals(1, validMessages.size());
+
         validMessages = validator.validate(
                 new User(1L, "@email", "login", "", LocalDate.now().minusDays(1)));
 
@@ -180,7 +182,7 @@ public class UserTest {
 
         validMessages = validMessages
                 .stream()
-                .filter(i -> !(i.getMessage().equals("Дата рождения не может быть в будущем") && i.getPropertyPath().toString().equals("birthDay")))
+                .filter(i -> !(i.getMessage().equals("Дата рождения не может быть в будущем") && i.getPropertyPath().toString().equals("birthday")))
                 .collect(Collectors.toSet());
 
         Assertions.assertEquals(0, validMessages.size());

@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Storage;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 
 public class FilmControllerTests {
