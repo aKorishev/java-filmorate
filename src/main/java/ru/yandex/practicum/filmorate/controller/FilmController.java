@@ -37,8 +37,12 @@ public class FilmController {
     }
 
     @PutMapping
-    public @ResponseBody Film putFilm(@Valid @RequestBody Film film) {
-        storage.updateFilm(film);
-        return film;
+    public @ResponseBody Film putFilm(@Valid @RequestBody Film film) throws Exception {
+        if (storage.containsFilm(film.getId())) {
+            storage.updateFilm(film);
+            return film;
+        }
+
+        throw new Exception("Пост с id = " + film.getId() + " не найден");
     }
 }

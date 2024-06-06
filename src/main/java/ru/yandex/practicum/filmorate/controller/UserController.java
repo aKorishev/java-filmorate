@@ -37,8 +37,12 @@ public class UserController {
     }
 
     @PutMapping
-    public @ResponseBody User putUser(@Valid @RequestBody User user) {
-        storage.updateUser(user);
-        return user;
+    public @ResponseBody User putUser(@Valid @RequestBody User user) throws Exception {
+        if (storage.containsUser(user.getId())) {
+            storage.updateUser(user);
+            return user;
+        }
+
+        throw new Exception("Пост с id = " + user.getId() + " не найден");
     }
 }
