@@ -2,10 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Storage;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -18,7 +21,14 @@ public class UserController {
 
     @GetMapping
     public @ResponseBody List<User> getUsers() {
-        return List.copyOf(storage.getUsers().values());
+        var list =  storage.getUsers().values().stream().sorted(new Comparator<User>() {
+                    @Override
+                    public int compare(User o1, User o2) {
+                        return Long.compare(o1.getId(), o2.getId());
+                    }
+                })
+                .collect(Collectors.toList());
+        return list;
     }
 
     @GetMapping("/{id}")

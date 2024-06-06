@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Storage;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/films")
@@ -18,7 +20,14 @@ public class FilmController {
 
     @GetMapping
     public @ResponseBody List<Film> getFilms() {
-        return List.copyOf(storage.getFilms().values());
+        var list =  storage.getFilms().values().stream().sorted(new Comparator<Film>() {
+            @Override
+            public int compare(Film o1, Film o2) {
+                return Long.compare(o1.getId(), o2.getId());
+            }
+        })
+                .collect(Collectors.toList());
+        return list;
     }
 
     @GetMapping("/{id}")
