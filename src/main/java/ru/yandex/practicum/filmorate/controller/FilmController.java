@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Storage;
 
@@ -20,12 +21,13 @@ public class FilmController {
 
     @GetMapping
     public @ResponseBody List<Film> getFilms() {
-        var list =  storage.getFilms().values().stream().sorted(new Comparator<Film>() {
-            @Override
-            public int compare(Film o1, Film o2) {
-                return Long.compare(o1.getId(), o2.getId());
-            }
-        })
+        var list =  storage.getFilms().values().stream()
+                .sorted(new Comparator<Film>() {
+                    @Override
+                    public int compare(Film o1, Film o2) {
+                        return Long.compare(o1.getId(), o2.getId());
+                    }
+                })
                 .collect(Collectors.toList());
         return list;
     }
@@ -34,10 +36,11 @@ public class FilmController {
     public @ResponseBody Film getFilm(@PathVariable long id) throws Exception {
         var films = storage.getFilms();
 
-        if (films.containsKey(id))
+        if (films.containsKey(id)) {
             return films.get(id);
+        }
 
-        throw new Exception("Не нашел id = " + id);
+        throw new NotFoundException("Не нашел id = " + id);
     }
 
     @PostMapping
@@ -52,6 +55,6 @@ public class FilmController {
             return film;
         }
 
-        throw new Exception("Пост с id = " + film.getId() + " не найден");
+        throw new NotFoundException("Пост с id = " + film.getId() + " не найден");
     }
 }

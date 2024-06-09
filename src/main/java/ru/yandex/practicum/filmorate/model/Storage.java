@@ -28,7 +28,10 @@ public class Storage {
             log.debug("Updated film id = " + id);
         } else {
             if (id == 0) {
-                id = films.keySet().stream().max(Long::compareTo).orElse(0L) + 1;
+                id = films.keySet().stream()
+                        .max(Long::compareTo)
+                        .orElse(0L)
+                        + 1;
 
                 film = new Film(id,
                         film.getName(),

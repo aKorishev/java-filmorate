@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Storage;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -34,10 +35,11 @@ public class UserController {
     public @ResponseBody User getUser(@PathVariable long id) throws Exception {
         var users = storage.getUsers();
 
-        if (users.containsKey(id))
+        if (users.containsKey(id)) {
             return users.get(id);
+        }
 
-        throw new Exception("Не нашел id = " + id);
+        throw new NotFoundException("Не нашел id = " + id);
     }
 
     @PostMapping
@@ -52,6 +54,6 @@ public class UserController {
             return user;
         }
 
-        throw new Exception("Пост с id = " + user.getId() + " не найден");
+        throw new NotFoundException("Пользователь с id = " + user.getId() + " не найден");
     }
 }

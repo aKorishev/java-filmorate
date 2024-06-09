@@ -137,14 +137,16 @@ public class UserTest {
 
     @Test
     void setNullLogin() {
-        try {
-            var user = new User(1L, "sf@email.ru", null, "", LocalDate.now().minusDays(1));
-        } catch (NullPointerException ex) {
-            if (ex.getMessage().equals("login is marked non-null but is null"))
-                return;
-        }
+        var user = new User(1L, "sf@email.ru", null, "", LocalDate.now().minusDays(1));
 
-        Assertions.fail();
+        var validMessages = validator.validate(user);
+
+        validMessages = validMessages
+                .stream()
+                .filter(i -> !(i.getMessage().equals("must not be blank") && i.getPropertyPath().toString().equals("login")))
+                .collect(Collectors.toSet());
+
+        Assertions.assertEquals(0, validMessages.size());
     }
 
     @Test
