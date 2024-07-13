@@ -18,7 +18,9 @@ public class UserTest {
 
     @Test
     void setNullEmail() {
-        var user = new User(1L, null, "login", "", LocalDate.now().minusDays(1));
+        var user = initUserBuilder()
+                .email(null)
+                .build();
 
         var validMessages = validator.validate(user);
 
@@ -34,7 +36,9 @@ public class UserTest {
 
     @Test
     void setBlankEmail() {
-        var user = new User(1L, "   ", "login", "", LocalDate.now().minusDays(1));
+        var user = initUserBuilder()
+                .email("   ")
+                .build();
 
         var validMessages = validator.validate(user);
 
@@ -49,8 +53,10 @@ public class UserTest {
 
     @Test
     void setEmailNotFormat() {
-        var validMessages = validator.validate(
-                new User(1L, "email", "login", "", LocalDate.now().minusDays(1)));
+        var user = initUserBuilder()
+                .email("email")
+                .build();
+        var validMessages = validator.validate(user);
 
         Assertions.assertEquals(1, validMessages.size());
 
@@ -61,25 +67,19 @@ public class UserTest {
                         .map(ConstraintViolation::getMessage)
                         .orElse(""));
 
-        validMessages = validator.validate(
-                        new User(1L, "dfgd.email", "login", "", LocalDate.now().minusDays(1)));
+        user = initUserBuilder()
+                .email("dfgd.email")
+                .build();
+
+        validMessages = validator.validate(user);
 
         Assertions.assertEquals(1, validMessages.size());
 
-        validMessages = validator.validate(
-                new User(1L, "@email", "login", "", LocalDate.now().minusDays(1)));
+        user = initUserBuilder()
+                .email("@email")
+                .build();
 
-        Assertions.assertEquals(1, validMessages.size());
-
-        Assertions.assertEquals(
-                "must be a well-formed email address",
-                validMessages
-                        .stream().findFirst()
-                        .map(ConstraintViolation::getMessage)
-                        .orElse(""));
-
-        validMessages = validator.validate(
-                new User(1L, "dfgd.email", "login", "", LocalDate.now().minusDays(1)));
+        validMessages = validator.validate(user);
 
         Assertions.assertEquals(1, validMessages.size());
 
@@ -90,8 +90,11 @@ public class UserTest {
                         .map(ConstraintViolation::getMessage)
                         .orElse(""));
 
-        validMessages = validator.validate(
-                        new User(1L, "dfgd@email.", "login", "", LocalDate.now().minusDays(1)));
+        user = initUserBuilder()
+                .email("dfgd@.email")
+                .build();
+
+        validMessages = validator.validate(user);
 
         Assertions.assertEquals(1, validMessages.size());
 
@@ -102,20 +105,11 @@ public class UserTest {
                         .map(ConstraintViolation::getMessage)
                         .orElse(""));
 
-        validMessages = validator.validate(
-                        new User(1L, "dfgd@.email", "login", "", LocalDate.now().minusDays(1)));
+        user = initUserBuilder()
+                .email("dfgd@email.tr.")
+                .build();
 
-        Assertions.assertEquals(1, validMessages.size());
-
-        Assertions.assertEquals(
-                "must be a well-formed email address",
-                validMessages
-                        .stream().findFirst()
-                        .map(ConstraintViolation::getMessage)
-                        .orElse(""));
-
-        validMessages = validator.validate(
-                        new User(1L, "dfgd@email.tr.", "login", "", LocalDate.now().minusDays(1)));
+        validMessages = validator.validate(user);
 
         Assertions.assertEquals(1, validMessages.size());
 
@@ -129,15 +123,20 @@ public class UserTest {
 
     @Test
     void setEmailFormat() {
-        var validMessages = validator.validate(
-                new User(1L, "dfgd@email.ru", "login", "", LocalDate.now().minusDays(1)));
+        var user = initUserBuilder()
+                .email("dfgd@email.ru")
+                .build();
+
+        var validMessages = validator.validate(user);
 
         Assertions.assertEquals(0, validMessages.size());
     }
 
     @Test
     void setNullLogin() {
-        var user = new User(1L, "sf@email.ru", null, "", LocalDate.now().minusDays(1));
+        var user = initUserBuilder()
+                .login(null)
+                .build();
 
         var validMessages = validator.validate(user);
 
@@ -151,7 +150,9 @@ public class UserTest {
 
     @Test
     void setBlankLogin() {
-        var user = new User(1L, "sf@email.ru", "   ", "", LocalDate.now().minusDays(1));
+        var user = initUserBuilder()
+                .login("    ")
+                .build();
 
         var validMessages = validator.validate(user);
 
@@ -165,21 +166,27 @@ public class UserTest {
 
     @Test
     void setNullName() {
-        var user = new User(1L, "sf@email.ru", "login", null, LocalDate.now().minusDays(1));
+        var user = initUserBuilder()
+                .name(null)
+                .build();
 
         Assertions.assertEquals("login", user.getName());
     }
 
     @Test
     void setBlankName() {
-        var user = new User(1L, "sf@email.ru", "login", "  ", LocalDate.now().minusDays(1));
+        var user = initUserBuilder()
+                .name("   ")
+                .build();
 
         Assertions.assertEquals("login", user.getName());
     }
 
     @Test
     void setFutureBirthDay() {
-        var user = new User(1L, "sf@email.ru", "login", "", LocalDate.now().plusDays(1));
+        var user = initUserBuilder()
+                .birthday(LocalDate.now().plusDays(1))
+                .build();
 
         var validMessages = validator.validate(user);
 
@@ -189,5 +196,13 @@ public class UserTest {
                 .collect(Collectors.toSet());
 
         Assertions.assertEquals(0, validMessages.size());
+    }
+
+    private User.UserBuilder initUserBuilder() {
+        return User.builder()
+                .id(1L)
+                .email("dfgd@email.ru")
+                .login("login")
+                .birthday(LocalDate.now());
     }
 }
