@@ -16,9 +16,7 @@ public class FilmTest {
 
     @Test
     void setNullName() {
-        var film = initFilmBuilder()
-                .name(null)
-                .build();
+        var film = new Film(1L, null, "", LocalDate.now(), 1L);
 
         var validMessages = validator.validate(film);
 
@@ -34,9 +32,7 @@ public class FilmTest {
 
     @Test
     void setBlankName() {
-        var film = initFilmBuilder()
-                .name("   ")
-                .build();
+        var film = new Film(1L, null, "", LocalDate.now(), 1L);
 
         var validMessages = validator.validate(film);
 
@@ -54,9 +50,7 @@ public class FilmTest {
     void setDescriptionMore200Chars() {
         var description = "s".repeat(201);
 
-        var film = initFilmBuilder()
-                .description(description)
-                .build();
+        var film = new Film(1L, "name", description, LocalDate.now(), 1L);
 
         var validMessages = validator.validate(film);
 
@@ -72,20 +66,19 @@ public class FilmTest {
 
     @Test
     void setNullReleaseDate() {
-        var exception = Assertions.assertThrows(
-                NullPointerException.class,
-                () -> initFilmBuilder()
-                        .releaseDate(null)
-                        .build());
+        try {
+            var film = new Film(1L, "name", "", null, Duration.ZERO.toSeconds());
+        } catch (NullPointerException ex) {
+            if (ex.getMessage().equals("releaseDate is marked non-null but is null"))
+                return;
+        }
 
-        Assertions.assertEquals("releaseDate is marked non-null but is null", exception.getMessage());
+        Assertions.fail();
     }
 
     @Test
     void setReleaseDateEarlyBurnCinema() {
-        var film = initFilmBuilder()
-                .releaseDate(LocalDate.of(1880,1,1))
-                .build();
+        var film = new Film(1L, "name", "", LocalDate.of(1880,1,1), 1L);
 
         var validMessages = validator.validate(film);
 
@@ -101,9 +94,7 @@ public class FilmTest {
 
     @Test
     void setDurationOnZero() {
-        var film = initFilmBuilder()
-                .duration(0)
-                .build();
+        var film = new Film(1L, "name", "", LocalDate.now(), 0L);
 
         var validMessages = validator.validate(film);
 
@@ -116,15 +107,4 @@ public class FilmTest {
                         .map(ConstraintViolation::getMessage)
                         .orElse(""));
     }
-
-
-    private Film.FilmBuilder initFilmBuilder() {
-        return Film.builder()
-                .id(1)
-                .name("name")
-                .description("")
-                .releaseDate(LocalDate.now())
-                .duration(1);
-    }
-
 }
