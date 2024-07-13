@@ -1,60 +1,72 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Storage;
+import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final Storage storage;
-
-    public FilmController(Storage storage) {
-        this.storage = storage;
-    }
+    @Autowired
+    private FilmService filmService;
 
     @GetMapping
     public @ResponseBody List<Film> getFilms() {
-        var list =  storage.getFilms().values().stream()
-                .sorted(new Comparator<Film>() {
-                    @Override
-                    public int compare(Film o1, Film o2) {
-                        return Long.compare(o1.getId(), o2.getId());
-                    }
-                })
-                .collect(Collectors.toList());
-        return list;
+        return filmService.getFilms(
+                SortOrder.UNKNOWN,
+                Optional.empty(),
+                Optional.empty()
+                );
     }
 
-    @GetMapping("/{id}")
-    public @ResponseBody Film getFilm(@PathVariable long id) throws Exception {
-        var films = storage.getFilms();
-
-        if (films.containsKey(id)) {
-            return films.get(id);
-        }
-
-        throw new NotFoundException("Не нашел id = " + id);
+    @GetMapping("/{filmId}")
+    public @ResponseBody Film getFilm(@PathVariable long filmId) {
+        //return filmService.getFilm(filmId);
+        return filmService.getFilmToTest();
     }
 
     @PostMapping
     public @ResponseBody Film updateFilm(@Valid @RequestBody Film film) {
-        return storage.updateFilm(film);
+        return filmService.postFilm(film);
     }
 
     @PutMapping
-    public @ResponseBody Film putFilm(@Valid @RequestBody Film film) throws Exception {
-        if (storage.containsFilm(film.getId())) {
-            storage.updateFilm(film);
-            return film;
+   // @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody Film putFilm(@Valid @RequestBody Film film) {
+        return filmService.putFilm(film);
+    }
+
+    @PutMapping("/{filmId}/like/{userId}")
+    //@ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody Film putLike(@PathVariable long filmId, @PathVariable long userId) {
+        filmService.like(filmId, userId);
+
+        return filmService.getFilm(filmId);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public @ResponseBody Film deleteLike(@PathVariable long filmId, @PathVariable long userId) {
+        filmService.disLike(filmId, userId);
+
+        return filmService.getFilm(filmId);
+    }
+
+    @GetMapping("/popular")
+    public @ResponseBody List<Film> getFilms(
+            @RequestParam Optional<Integer> limit,
+            @RequestParam Optional<Integer> skip) {
+
+        if (limit.isEmpty()) {
+            limit = Optional.of(10);
         }
 
-        throw new NotFoundException("Пост с id = " + film.getId() + " не найден");
+        //return filmService.getFilms(SortOrder.DESCENDING, limit, skip);
+        return filmService.getFilmsToTest();
     }
 }
