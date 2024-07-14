@@ -16,7 +16,7 @@ import java.util.Set;
 @Builder(toBuilder = true)
 @Validated
 public class User {
-    long id;
+    Long id;
 
     @NotBlank
     @Email

@@ -30,12 +30,11 @@ public class UserController {
     }
 
     @PostMapping
-    public @ResponseBody User updateUser(@Valid @RequestBody User user) {
+    public @ResponseBody User postUser(@Valid @RequestBody User user) {
         return userService.postUser(user);
     }
 
     @PutMapping
-    //@ResponseStatus(HttpStatus.CREATED) //тест падает если передать 201//теперь сервис здесь делает только Update
     public @ResponseBody User putUser(@Valid @RequestBody User user) {
         return userService.putUser(user);
     }
@@ -47,7 +46,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}/friends/{friendId}")
     public @ResponseBody User deleteFriend(@PathVariable long userId, @PathVariable long friendId) {
-        return userService.deleteFriendForTest(userId, friendId);
+        return userService.deleteFriend(userId, friendId);
     }
 
     @GetMapping("/{userId}/friends")

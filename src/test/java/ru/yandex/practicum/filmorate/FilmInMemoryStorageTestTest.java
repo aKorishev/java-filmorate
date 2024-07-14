@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SortOrder;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -16,18 +17,15 @@ public class FilmInMemoryStorageTestTest {
     void deleteFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .build());
 
@@ -40,13 +38,11 @@ public class FilmInMemoryStorageTestTest {
     void updateFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
-        filmStorage.updateFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.updateFilm(initFilmBuilder(1)
                 .name("film2")
                 .build());
 
@@ -57,8 +53,7 @@ public class FilmInMemoryStorageTestTest {
     void createFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
@@ -69,15 +64,15 @@ public class FilmInMemoryStorageTestTest {
     void createNotUniqueFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        Assertions.assertThrows(
+                IdIsAlreadyInUseException.class,
+                () -> filmStorage.createFilm(initFilmBuilder(1)
                 .name("film2")
-                .build());
+                .build()));
 
         Assertions.assertEquals(1, filmStorage.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
     }
@@ -86,18 +81,15 @@ public class FilmInMemoryStorageTestTest {
     void createThreeFilms() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .build());
 
@@ -108,18 +100,15 @@ public class FilmInMemoryStorageTestTest {
     void containsKeyIsTrue() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .build());
 
@@ -130,18 +119,15 @@ public class FilmInMemoryStorageTestTest {
     void containsKeyIsFalse() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .build());
 
@@ -152,18 +138,15 @@ public class FilmInMemoryStorageTestTest {
     void getFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .build());
 
@@ -174,20 +157,17 @@ public class FilmInMemoryStorageTestTest {
     void getSortedFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .likes(Set.of(5L, 6L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .likes(Set.of(5L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
@@ -199,20 +179,17 @@ public class FilmInMemoryStorageTestTest {
     void getSortedDescFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .likes(Set.of(5L, 6L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .likes(Set.of(5L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
@@ -224,20 +201,17 @@ public class FilmInMemoryStorageTestTest {
     void getSkipFilms() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .likes(Set.of(5L, 6L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .likes(Set.of(5L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
@@ -249,20 +223,17 @@ public class FilmInMemoryStorageTestTest {
     void getFirst2Films() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .likes(Set.of(5L, 6L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .likes(Set.of(5L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
@@ -274,26 +245,22 @@ public class FilmInMemoryStorageTestTest {
     void get2stFilm() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(1)
+        filmStorage.createFilm(initFilmBuilder(1)
                 .name("film1")
                 .likes(Set.of(5L, 6L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(2)
+        filmStorage.createFilm(initFilmBuilder(2)
                 .name("film2")
                 .likes(Set.of(5L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(3)
+        filmStorage.createFilm(initFilmBuilder(3)
                 .name("film3")
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
 
-        filmStorage.createFilm(initFilmBuilder()
-                .id(4)
+        filmStorage.createFilm(initFilmBuilder(4)
                 .name("film3")
                 .likes(Set.of(5L, 6L, 8L, 10L))
                 .build());
@@ -305,9 +272,9 @@ public class FilmInMemoryStorageTestTest {
         Assertions.assertEquals(3L, films.getFirst().getId());
     }
 
-    private Film.FilmBuilder initFilmBuilder() {
+    private Film.FilmBuilder initFilmBuilder(int id) {
         return Film.builder()
-                .id(1)
+                .id((long) id)
                 .name("name")
                 .description("")
                 .releaseDate(LocalDate.now())

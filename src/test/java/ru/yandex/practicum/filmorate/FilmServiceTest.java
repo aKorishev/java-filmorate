@@ -22,7 +22,7 @@ public class FilmServiceTest {
                 new InMemoryFilmStorage(),
                 new InMemoryUserStorage());
 
-        filmService.postFilm(initFilmBuilder().build());
+        filmService.postFilm(initFilmBuilder(1).build());
 
         Assertions.assertNotNull(filmService.getFilm(1L));
     }
@@ -34,7 +34,7 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
+                initFilmBuilder(1)
                         .build());
 
         Assertions.assertThrows(NotFoundException.class, () -> filmService.getFilm(3L));
@@ -47,29 +47,25 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .likes(Set.of(1L))
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(2)
+                initFilmBuilder(2)
                         .name("film2")
                         .likes(Set.of())
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(3)
+                initFilmBuilder(3)
                         .name("film3")
                         .likes(Set.of(1L, 4L, 5L))
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(4)
+                initFilmBuilder(4)
                         .name("film4")
                         .likes(Set.of(1L, 4L))
                         .build());
@@ -88,20 +84,17 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(2)
+                initFilmBuilder(2)
                         .name("film2")
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(3)
+                initFilmBuilder(3)
                         .name("film3")
                         .build());
 
@@ -117,45 +110,21 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(2)
+                initFilmBuilder(2)
                         .name("film2")
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(3)
+                initFilmBuilder(3)
                         .name("film3")
                         .build());
 
         Assertions.assertThrows(NotFoundException.class, () -> filmService.getFilm(5L));
-    }
-
-    @Test
-    void getThrowOnCreateFilm() {
-        var filmService = new FilmService(
-                new InMemoryFilmStorage(),
-                new InMemoryUserStorage());
-
-        filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
-                        .name("film1")
-                        .build());
-
-        var film =
-                initFilmBuilder()
-                        .id(1)
-                        .name("film2")
-                        .build();
-
-        //Assertions.assertThrows(IdIsAlreadyInUseException.class, () -> filmService.postFilm(film)); //Отменил из Postman тестов
     }
 
     @Test
@@ -165,14 +134,12 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(2)
+                initFilmBuilder(2)
                         .name("film2")
                         .build());
 
@@ -186,14 +153,12 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film2")
                         .build());
 
@@ -211,15 +176,14 @@ public class FilmServiceTest {
                 userStorage);
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
         Assertions.assertEquals(0, filmService.getFilm(1).getLikes().size(), "Начальное значение");
 
         for (int i = 1; i < 100; i++) {
-           userStorage.createUser(User.builder().id(i).birthday(LocalDate.now()).build());
+           userStorage.createUser(initUserBuilder(i).build());
 
            filmService.like(1, i);
 
@@ -234,8 +198,7 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
@@ -250,11 +213,10 @@ public class FilmServiceTest {
                 new InMemoryFilmStorage(),
                 userStorage);
 
-        userStorage.createUser(User.builder().id(1).birthday(LocalDate.now()).build());
+        userStorage.createUser(initUserBuilder(1).build());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
@@ -272,13 +234,12 @@ public class FilmServiceTest {
                 userStorage);
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
-        userStorage.createUser(User.builder().id(1).birthday(LocalDate.now()).build());
-        userStorage.createUser(User.builder().id(2).birthday(LocalDate.now()).build());
+        userStorage.createUser(initUserBuilder(1).build());
+        userStorage.createUser(initUserBuilder(2).build());
 
         filmService.like(1, 1);
         filmService.like(1, 2);
@@ -295,8 +256,7 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
@@ -312,14 +272,13 @@ public class FilmServiceTest {
                 userStorage);
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
-        userStorage.createUser(User.builder().id(1).birthday(LocalDate.now()).build());
-        userStorage.createUser(User.builder().id(2).birthday(LocalDate.now()).build());
-        userStorage.createUser(User.builder().id(4).birthday(LocalDate.now()).build());
+        userStorage.createUser(initUserBuilder(1).build());
+        userStorage.createUser(initUserBuilder(2).build());
+        userStorage.createUser(initUserBuilder(4).build());
 
         filmService.like(1, 1);
         filmService.like(1, 2);
@@ -335,8 +294,7 @@ public class FilmServiceTest {
                 new InMemoryUserStorage());
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
@@ -352,14 +310,13 @@ public class FilmServiceTest {
                 userStorage);
 
         filmService.postFilm(
-                initFilmBuilder()
-                        .id(1)
+                initFilmBuilder(1)
                         .name("film1")
                         .build());
 
-        userStorage.createUser(User.builder().id(1).birthday(LocalDate.now()).build());
-        userStorage.createUser(User.builder().id(2).birthday(LocalDate.now()).build());
-        userStorage.createUser(User.builder().id(4).birthday(LocalDate.now()).build());
+        userStorage.createUser(initUserBuilder(1).build());
+        userStorage.createUser(initUserBuilder(2).build());
+        userStorage.createUser(initUserBuilder(4).build());
 
         filmService.like(1, 1);
         filmService.like(1, 2);
@@ -369,13 +326,18 @@ public class FilmServiceTest {
     }
 
 
-    private Film.FilmBuilder initFilmBuilder() {
+    private Film.FilmBuilder initFilmBuilder(int id) {
         return Film.builder()
-                .id(1)
+                .id((long) id)
                 .name("name")
                 .description("")
                 .releaseDate(LocalDate.now())
                 .duration(1);
     }
 
+    private User.UserBuilder initUserBuilder(int id) {
+        return User.builder()
+                .id((long) id)
+                .birthday(LocalDate.now());
+    }
 }

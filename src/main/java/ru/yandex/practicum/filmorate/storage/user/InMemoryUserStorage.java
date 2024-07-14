@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.model.SortOrder;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -55,18 +56,40 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void updateUser(User user) {
+    public User updateUser(User user) {
         users.replace(user.getId(), user);
+
+        return user;
     }
 
     @Override
-    public void createUser(User user) {
-        users.put(user.getId(), user);
+    public User createUser(User user) {
+        var userId = user.getId();
+
+        if (userId == null) {
+            userId = getIncrementId();
+
+            user = user.toBuilder().id(userId).build();
+        } else if (users.containsKey(userId)) {
+            throw new IdIsAlreadyInUseException(String.format("Этот userId: %d уже был использован", userId));
+        }
+
+        users.put(userId, user);
+
+        return user;
     }
 
     @Override
-    public void deleteUser(long userId) {
-        users.remove(userId);
+    public User deleteUser(long userId) {
+        if (users.containsKey(userId)) {
+            var user = users.get(userId);
+
+            users.remove(userId);
+
+            return user;
+        }
+
+        return null;
     }
 
     @Override
@@ -77,8 +100,7 @@ public class InMemoryUserStorage implements UserStorage {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public long getIncrementId() {
+    private long getIncrementId() {
         return users.keySet()
                 .stream().mapToLong(i -> i)
                 .max()

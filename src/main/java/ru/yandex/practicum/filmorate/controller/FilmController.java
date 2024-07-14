@@ -27,23 +27,20 @@ public class FilmController {
 
     @GetMapping("/{filmId}")
     public @ResponseBody Film getFilm(@PathVariable long filmId) {
-        //return filmService.getFilm(filmId);
-        return filmService.getFilmToTest();
+       return filmService.getFilm(filmId);
     }
 
     @PostMapping
-    public @ResponseBody Film updateFilm(@Valid @RequestBody Film film) {
+    public @ResponseBody Film postFilm(@Valid @RequestBody Film film) {
         return filmService.postFilm(film);
     }
 
     @PutMapping
-   // @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody Film putFilm(@Valid @RequestBody Film film) {
         return filmService.putFilm(film);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    //@ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody Film putLike(@PathVariable long filmId, @PathVariable long userId) {
         filmService.like(filmId, userId);
 
@@ -66,7 +63,7 @@ public class FilmController {
             limit = Optional.of(10);
         }
 
-        //return filmService.getFilms(SortOrder.DESCENDING, limit, skip);
-        return filmService.getFilmsToTest();
+        return filmService.getFilms(SortOrder.DESCENDING, limit, skip);
+        //return filmService.getFilmsToTest();
     }
 }

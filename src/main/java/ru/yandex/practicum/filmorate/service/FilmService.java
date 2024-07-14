@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.SortOrder;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -40,43 +39,34 @@ public class FilmService {
         return filmStorage.getFilms(sortOrderLikes, size, from);
     }
 
-    public List<Film> getFilmsToTest() {
-        return List.of(
-                Film.builder().id(0).releaseDate(LocalDate.now()).build(),
-                Film.builder().id(20).releaseDate(LocalDate.now()).build()//,
-     //           Film.builder().id(20).releaseDate(LocalDate.now()).build()
-        );
-    }
-
-    public Film getFilmToTest() {
-        return Film.builder().id(1).releaseDate(LocalDate.now()).build();
-    }
-
     public Film putFilm(Film film) {
         var filmId = film.getId();
 
-        if (filmStorage.containsKey(filmId)) {
-            filmStorage.updateFilm(film);
+        if (filmId != null && filmStorage.containsKey(filmId)) {
+            film = filmStorage.updateFilm(film);
 
-            log.trace("putUser: Обновил film: " + film);
+            log.trace("putFilm: Обновил film: " + film);
         } else {
-            throw new NotFoundException(String.format("Этот filmId: %d не был найден", filmId));
+            if (filmId == null)
+                throw new NotFoundException("putFilm: filmId: null не был найден");
+            else
+                throw new NotFoundException(String.format("putFilm: filmId: %d не был найден", filmId));
         }
 
         return film;
     }
 
     public Film postFilm(Film film) {
-        var filmId = film.getId();
+        var filmId1 = film.getId();
 
-        if (filmStorage.containsKey(filmId)) {
-            filmStorage.updateFilm(film);
+        if (filmId1 != null && filmStorage.containsKey(filmId1)) {
+            film = filmStorage.updateFilm(film);
 
-            log.trace(String.format("postFilm: Успешно обновил filmId: %d", filmId));
+            log.trace("postFilm: Обновил film: " + film);
         } else {
-            filmStorage.createFilm(film);
+            film = filmStorage.createFilm(film);
 
-            log.trace(String.format("postFilm: Не нашел filmId: %d. Создал новую запись", filmId));
+            log.trace("postFilm: Создал film: " + film);
         }
 
         return film;
@@ -87,11 +77,9 @@ public class FilmService {
             throw new NotFoundException(String.format("Этот filmId: %d не был найден", filmId));
         }
 
-        var oldFilm = filmStorage.getFilm(filmId);
+        var oldFilm = filmStorage.deleteFilm(filmId);
 
-        filmStorage.deleteFilm(filmId);
-
-        log.trace(String.format("Удалиил запись filmId: %d", filmId));
+        log.trace("deleteFilm: Удалил film: " + oldFilm);
 
         return oldFilm;
     }

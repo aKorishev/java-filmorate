@@ -8,11 +8,11 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface UserStorage {
-    void updateUser(User user);
+    User updateUser(User user);
 
-    void createUser(User user);
+    User createUser(User user);
 
-    void deleteUser(long userId);
+    User deleteUser(long userId);
 
     boolean containsKey(long userId);
 
@@ -21,6 +21,4 @@ public interface UserStorage {
     public List<User> getUsers(SortOrder sortOrderNames, Optional<Integer> size, Optional<Integer> from);
 
     public List<User> getUsers(Set<Long> ids);
-
-    long getIncrementId();
 }

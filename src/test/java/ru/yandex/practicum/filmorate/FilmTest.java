@@ -120,7 +120,7 @@ public class FilmTest {
 
     private Film.FilmBuilder initFilmBuilder() {
         return Film.builder()
-                .id(1)
+                .id(1L)
                 .name("name")
                 .description("")
                 .releaseDate(LocalDate.now())

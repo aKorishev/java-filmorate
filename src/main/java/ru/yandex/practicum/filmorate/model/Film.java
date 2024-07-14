@@ -19,7 +19,7 @@ import java.util.Set;
 @Validated
 @Builder(toBuilder = true)
 public class Film {
-    long id;
+    Long id;
 
     @NotBlank
     String name;

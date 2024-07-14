@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SortOrder;
 
@@ -55,17 +56,46 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void updateFilm(Film film) {
+    public Film updateFilm(Film film) {
         films.replace(film.getId(), film);
+
+        return film;
     }
 
     @Override
-    public void createFilm(Film film) {
-        films.put(film.getId(), film);
+    public Film createFilm(Film film) {
+        var filmId = film.getId();
+
+        if (filmId == null) {
+            filmId = getIncrementId();
+
+            film = film.toBuilder().id(filmId).build();
+        } else if (films.containsKey(filmId)) {
+            throw new IdIsAlreadyInUseException(String.format("Этот film: %d уже был использован", filmId));
+        }
+
+        films.put(filmId, film);
+
+        return film;
     }
 
     @Override
-    public void deleteFilm(long filmId) {
-        films.remove(filmId);
+    public Film deleteFilm(long filmId) {
+        if (films.containsKey(filmId)) {
+            var film = films.get(filmId);
+
+            films.remove(filmId);
+
+            return film;
+        }
+
+        return null;
+    }
+
+    private long getIncrementId() {
+        return films.keySet()
+                .stream().mapToLong(i -> i)
+                .max()
+                .orElse(0) + 1;
     }
 }

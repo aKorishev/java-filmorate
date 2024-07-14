@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.model.SortOrder;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -16,13 +17,11 @@ public class UserInMemoryStorageTestTest {
     void updateUser() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
-        userStorage.updateUser(initUserBuilder()
-                .id(1)
+        userStorage.updateUser(initUserBuilder(1)
                 .name("user2")
                 .build());
 
@@ -33,8 +32,7 @@ public class UserInMemoryStorageTestTest {
     void createUser() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
@@ -45,15 +43,15 @@ public class UserInMemoryStorageTestTest {
     void createNotUniqueUser() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        Assertions.assertThrows(
+                IdIsAlreadyInUseException.class,
+                () -> userStorage.createUser(initUserBuilder(1)
                 .name("user2")
-                .build());
+                .build()));
 
         Assertions.assertEquals(1, userStorage.getUsers(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
     }
@@ -62,18 +60,15 @@ public class UserInMemoryStorageTestTest {
     void createThreeUsers() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user3")
                 .build());
 
@@ -84,18 +79,15 @@ public class UserInMemoryStorageTestTest {
     void containsKeyIsTrue() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user3")
                 .build());
 
@@ -106,18 +98,15 @@ public class UserInMemoryStorageTestTest {
     void containsKeyIsFalse() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user3")
                 .build());
 
@@ -128,18 +117,15 @@ public class UserInMemoryStorageTestTest {
     void getUser() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user3")
                 .build());
 
@@ -150,18 +136,15 @@ public class UserInMemoryStorageTestTest {
     void getAllUsersForIds() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user3")
                 .build());
 
@@ -174,23 +157,19 @@ public class UserInMemoryStorageTestTest {
     void getSortedUser() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user4")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(4)
+        userStorage.createUser(initUserBuilder(4)
                 .name("user3")
                 .build());
 
@@ -201,23 +180,19 @@ public class UserInMemoryStorageTestTest {
     void getSortedDescFilm() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user4")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(4)
+        userStorage.createUser(initUserBuilder(4)
                 .name("user3")
                 .build());
 
@@ -228,23 +203,19 @@ public class UserInMemoryStorageTestTest {
     void getSkipFilms() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user4")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(4)
+        userStorage.createUser(initUserBuilder(4)
                 .name("user3")
                 .build());
 
@@ -255,23 +226,19 @@ public class UserInMemoryStorageTestTest {
     void getFirst2Films() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user4")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(4)
+        userStorage.createUser(initUserBuilder(4)
                 .name("user3")
                 .build());
 
@@ -282,23 +249,19 @@ public class UserInMemoryStorageTestTest {
     void get2stFilm() {
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userStorage.createUser(initUserBuilder()
-                .id(1)
+        userStorage.createUser(initUserBuilder(1)
                 .name("user2")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(2)
+        userStorage.createUser(initUserBuilder(2)
                 .name("user4")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(3)
+        userStorage.createUser(initUserBuilder(3)
                 .name("user1")
                 .build());
 
-        userStorage.createUser(initUserBuilder()
-                .id(4)
+        userStorage.createUser(initUserBuilder(4)
                 .name("user3")
                 .build());
 
@@ -309,9 +272,9 @@ public class UserInMemoryStorageTestTest {
         Assertions.assertEquals(4L, users.getFirst().getId());
     }
 
-    private User.UserBuilder initUserBuilder() {
+    private User.UserBuilder initUserBuilder(int i) {
         return User.builder()
-                .id(1L)
+                .id((long) i)
                 .email("dfgd@email.ru")
                 .login("login")
                 .birthday(LocalDate.now());

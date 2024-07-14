@@ -19,7 +19,7 @@ public class UserServiceTest {
         var userService = new UserService(
                 new InMemoryUserStorage());
 
-        userService.postUser(initUserBuilder().id(1).build());
+        userService.postUser(initUserBuilder(1).build());
 
         Assertions.assertNotNull(userService.getUser(1L));
     }
@@ -30,7 +30,7 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
+                initUserBuilder(1)
                         .build());
 
         Assertions.assertThrows(NotFoundException.class, () -> userService.getUser(3L));
@@ -42,26 +42,22 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user2")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(3)
+                initUserBuilder(3)
                         .name("user4")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(4)
+                initUserBuilder(4)
                         .name("user3")
                         .build());
 
@@ -78,20 +74,17 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user2")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(3)
+                initUserBuilder(3)
                         .name("user3")
                         .build());
 
@@ -106,44 +99,21 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user2")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(3)
+                initUserBuilder(3)
                         .name("user3")
                         .build());
 
         Assertions.assertThrows(NotFoundException.class, () -> userService.getUser(5L));
-    }
-
-    @Test
-    void getThrowOnCreateUser() {
-        var userService = new UserService(
-                new InMemoryUserStorage());
-
-        userService.postUser(
-                initUserBuilder()
-                        .id(1)
-                        .name("user1")
-                        .build());
-
-        var user =
-                initUserBuilder()
-                        .id(1)
-                        .name("user2")
-                        .build();
-
-        // Assertions.assertThrows(IdIsAlreadyInUseException.class, () -> userService.postUser(user)); //Из-за подгонки для корпат.тестов я потерял этот тест
     }
 
     @Test
@@ -152,14 +122,12 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user2")
                         .build());
 
@@ -172,14 +140,12 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user2")
                         .build());
 
@@ -194,8 +160,7 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         for (int i = 1; i < 20; i++) {
-            userService.postUser(initUserBuilder()
-                    .id(i)
+            userService.postUser(initUserBuilder(i)
                     .name("user" + i)
                     .build());
         }
@@ -212,14 +177,12 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user1")
                         .build());
 
@@ -232,14 +195,12 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user1")
                         .build());
 
@@ -252,8 +213,7 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
@@ -266,8 +226,7 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         for (int i = 1; i < 20; i++) {
-            userService.postUser(initUserBuilder()
-                    .id(i)
+            userService.postUser(initUserBuilder(i)
                     .name("user" + i)
                     .build());
         }
@@ -288,8 +247,7 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         for (int i = 1; i < 20; i++) {
-            userService.postUser(initUserBuilder()
-                    .id(i)
+            userService.postUser(initUserBuilder(i)
                     .name("user" + i)
                     .build());
         }
@@ -310,14 +268,12 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user1")
                         .build());
 
@@ -332,14 +288,12 @@ public class UserServiceTest {
                 new InMemoryUserStorage());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(1)
+                initUserBuilder(1)
                         .name("user1")
                         .build());
 
         userService.postUser(
-                initUserBuilder()
-                        .id(2)
+                initUserBuilder(2)
                         .name("user1")
                         .build());
 
@@ -349,9 +303,9 @@ public class UserServiceTest {
     }
 
 
-    private User.UserBuilder initUserBuilder() {
+    private User.UserBuilder initUserBuilder(int id) {
         return User.builder()
-                .id(1L)
+                .id((long) id)
                 .email("dfgd@email.ru")
                 .login("login")
                 .birthday(LocalDate.now());
