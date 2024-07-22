@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,31 +27,22 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getFilms(SortOrder sortOrderLikes, Optional<Integer> size, Optional<Integer> from) {
+    public List<Film> getFilms(
+            @NonNull SortParameters parameters) {
         var stream = films.values().stream();
 
-        if (sortOrderLikes == SortOrder.ASCENDING) {
-            stream = stream.sorted(new Comparator<Film>() {
-                @Override
-                public int compare(Film o1, Film o2) {
-                    return Integer.compare(o1.getLikes().size(), o2.getLikes().size());
-                }
-            });
-        } else if (sortOrderLikes == SortOrder.DESCENDING) {
-            stream = stream.sorted(new Comparator<Film>() {
-                @Override
-                public int compare(Film o1, Film o2) {
-                    return -1 * Integer.compare(o1.getLikes().size(), o2.getLikes().size());
-                }
-            });
+        if (parameters.getSortOrder() == SortOrder.ASCENDING) {
+            stream = stream.sorted(Comparator.comparingInt(o -> o.getLikes().size()));
+        } else if (parameters.getSortOrder() == SortOrder.DESCENDING) {
+            stream = stream.sorted(Comparator.comparingInt(o -> -1 * o.getLikes().size()));
         }
 
-        if (from.isPresent()) {
-            stream = stream.skip(from.get());
+        if (parameters.getFrom().isPresent()) {
+            stream = stream.skip(parameters.getFrom().get());
         }
 
-        if (size.isPresent()) {
-            stream = stream.limit(size.get());
+        if (parameters.getSize().isPresent()) {
+            stream = stream.limit(parameters.getSize().get());
         }
 
         return stream.collect(Collectors.toList());

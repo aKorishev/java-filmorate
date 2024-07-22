@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
@@ -25,31 +27,22 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getUsers(SortOrder sortOrderNames, Optional<Integer> size, Optional<Integer> from) {
+    public List<User> getUsers(
+            @NonNull SortParameters parameters) {
         var stream = users.values().stream();
 
-        if (sortOrderNames == SortOrder.ASCENDING) {
-            stream = stream.sorted(new Comparator<User>() {
-                @Override
-                public int compare(User o1, User o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
-        } else if (sortOrderNames == SortOrder.DESCENDING) {
-            stream = stream.sorted(new Comparator<User>() {
-                @Override
-                public int compare(User o1, User o2) {
-                    return -1 * o1.getName().compareTo(o2.getName());
-                }
-            });
+        if (parameters.getSortOrder() == SortOrder.ASCENDING) {
+            stream = stream.sorted(Comparator.comparing(User::getName));
+        } else if (parameters.getSortOrder() == SortOrder.DESCENDING) {
+            stream = stream.sorted((o1, o2) -> -1 * o1.getName().compareTo(o2.getName()));
         }
 
-        if (from.isPresent()) {
-            stream = stream.skip(from.get());
+        if (parameters.getFrom().isPresent()) {
+            stream = stream.skip(parameters.getFrom().get());
         }
 
-        if (size.isPresent()) {
-            stream = stream.limit(size.get());
+        if (parameters.getSize().isPresent()) {
+            stream = stream.limit(parameters.getSize().get());
         }
 
         return stream.collect(Collectors.toList());

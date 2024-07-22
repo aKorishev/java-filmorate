@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.Set;
 
 public class FilmInMemoryStorageTestTest {
@@ -31,7 +31,10 @@ public class FilmInMemoryStorageTestTest {
 
         filmStorage.deleteFilm(2);
 
-        Assertions.assertEquals(2, filmStorage.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(
+                2,
+                filmStorage.getFilms(SortParameters.builder().build())
+                        .size());
     }
 
     @Test
@@ -74,7 +77,7 @@ public class FilmInMemoryStorageTestTest {
                 .name("film2")
                 .build()));
 
-        Assertions.assertEquals(1, filmStorage.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(1, filmStorage.getFilms(SortParameters.builder().build()).size());
     }
 
     @Test
@@ -93,7 +96,7 @@ public class FilmInMemoryStorageTestTest {
                 .name("film3")
                 .build());
 
-        Assertions.assertEquals(3, filmStorage.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(3, filmStorage.getFilms(SortParameters.builder().build()).size());
     }
 
     @Test
@@ -172,7 +175,10 @@ public class FilmInMemoryStorageTestTest {
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
 
-        Assertions.assertEquals(2L, filmStorage.getFilms(SortOrder.ASCENDING, Optional.empty(), Optional.empty()).getFirst().getId());
+        Assertions.assertEquals(2L, filmStorage.getFilms(
+                SortParameters.builder()
+                        .sortOrder(SortOrder.ASCENDING)
+                        .build()).getFirst().getId());
     }
 
     @Test
@@ -194,7 +200,10 @@ public class FilmInMemoryStorageTestTest {
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
 
-        Assertions.assertEquals(3L, filmStorage.getFilms(SortOrder.DESCENDING, Optional.empty(), Optional.empty()).getFirst().getId());
+        Assertions.assertEquals(3L, filmStorage.getFilms(
+                SortParameters.builder()
+                        .sortOrder(SortOrder.DESCENDING)
+                        .build()).getFirst().getId());
     }
 
     @Test
@@ -216,7 +225,10 @@ public class FilmInMemoryStorageTestTest {
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
 
-        Assertions.assertEquals(2, filmStorage.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.of(1)).size());
+        Assertions.assertEquals(2, filmStorage.getFilms(
+                SortParameters.builder()
+                        .from(1)
+                        .build()).size());
     }
 
     @Test
@@ -238,7 +250,10 @@ public class FilmInMemoryStorageTestTest {
                 .likes(Set.of(5L, 6L, 8L))
                 .build());
 
-        Assertions.assertEquals(2, filmStorage.getFilms(SortOrder.UNKNOWN, Optional.of(2), Optional.empty()).size());
+        Assertions.assertEquals(2, filmStorage.getFilms(
+                SortParameters.builder()
+                        .size(2)
+                        .build()).size());
     }
 
     @Test
@@ -265,7 +280,11 @@ public class FilmInMemoryStorageTestTest {
                 .likes(Set.of(5L, 6L, 8L, 10L))
                 .build());
 
-        var films = filmStorage.getFilms(SortOrder.DESCENDING, Optional.of(2), Optional.of(1));
+        var films = filmStorage.getFilms(SortParameters.builder()
+                        .sortOrder(SortOrder.DESCENDING)
+                        .size(2)
+                        .from(1)
+                        .build());
 
         Assertions.assertEquals(2, films.size());
 

@@ -2,14 +2,13 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.model.SortOrder;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.Set;
 
 public class UserInMemoryStorageTestTest {
@@ -53,7 +52,7 @@ public class UserInMemoryStorageTestTest {
                 .name("user2")
                 .build()));
 
-        Assertions.assertEquals(1, userStorage.getUsers(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(1, userStorage.getUsers(SortParameters.builder().build()).size());
     }
 
     @Test
@@ -72,7 +71,7 @@ public class UserInMemoryStorageTestTest {
                 .name("user3")
                 .build());
 
-        Assertions.assertEquals(3, userStorage.getUsers(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(3, userStorage.getUsers(SortParameters.builder().build()).size());
     }
 
     @Test
@@ -173,7 +172,11 @@ public class UserInMemoryStorageTestTest {
                 .name("user3")
                 .build());
 
-        Assertions.assertEquals(3L, userStorage.getUsers(SortOrder.ASCENDING, Optional.empty(), Optional.empty()).getFirst().getId());
+        Assertions.assertEquals(3L, userStorage.getUsers(
+                SortParameters.builder()
+                        .setAscending()
+                        .build())
+                .getFirst().getId());
     }
 
     @Test
@@ -196,7 +199,11 @@ public class UserInMemoryStorageTestTest {
                 .name("user3")
                 .build());
 
-        Assertions.assertEquals(2L, userStorage.getUsers(SortOrder.DESCENDING, Optional.empty(), Optional.empty()).getFirst().getId());
+        Assertions.assertEquals(2L, userStorage.getUsers(
+                SortParameters.builder()
+                        .setDescending()
+                        .build())
+                .getFirst().getId());
     }
 
     @Test
@@ -219,7 +226,10 @@ public class UserInMemoryStorageTestTest {
                 .name("user3")
                 .build());
 
-        Assertions.assertEquals(2, userStorage.getUsers(SortOrder.UNKNOWN, Optional.empty(), Optional.of(2)).size());
+        Assertions.assertEquals(2, userStorage.getUsers(
+                SortParameters.builder()
+                        .from(2)
+                        .build()).size());
     }
 
     @Test
@@ -242,7 +252,10 @@ public class UserInMemoryStorageTestTest {
                 .name("user3")
                 .build());
 
-        Assertions.assertEquals(2, userStorage.getUsers(SortOrder.UNKNOWN, Optional.of(2), Optional.empty()).size());
+        Assertions.assertEquals(2, userStorage.getUsers(
+                SortParameters.builder()
+                        .size(2)
+                        .build()).size());
     }
 
     @Test
@@ -265,7 +278,12 @@ public class UserInMemoryStorageTestTest {
                 .name("user3")
                 .build());
 
-        var users = userStorage.getUsers(SortOrder.DESCENDING, Optional.of(2), Optional.of(1));
+        var users = userStorage.getUsers(
+                SortParameters.builder()
+                        .setDescending()
+                        .size(2)
+                        .from(1)
+                        .build());
 
         Assertions.assertEquals(2, users.size());
 

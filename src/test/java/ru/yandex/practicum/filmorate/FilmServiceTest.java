@@ -6,13 +6,13 @@ import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.Set;
 
 public class FilmServiceTest {
@@ -70,7 +70,12 @@ public class FilmServiceTest {
                         .likes(Set.of(1L, 4L))
                         .build());
 
-        var films = filmService.getFilms(SortOrder.DESCENDING, Optional.of(2), Optional.of(1));
+        var films = filmService.getFilms(
+                SortParameters.builder()
+                        .sortOrder(SortOrder.DESCENDING)
+                        .size(2)
+                        .from(1)
+                        .build());
 
         Assertions.assertEquals(2, films.size());
 
@@ -100,7 +105,7 @@ public class FilmServiceTest {
 
         filmService.deleteFilm(2);
 
-        Assertions.assertEquals(2, filmService.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(2, filmService.getFilms(SortParameters.builder().build()).size());
     }
 
     @Test
@@ -143,7 +148,10 @@ public class FilmServiceTest {
                         .name("film2")
                         .build());
 
-        Assertions.assertEquals(2, filmService.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(
+                2,
+                filmService.getFilms(SortParameters.builder().build())
+                        .size());
     }
 
     @Test
@@ -162,7 +170,7 @@ public class FilmServiceTest {
                         .name("film2")
                         .build());
 
-        Assertions.assertEquals(1, filmService.getFilms(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(1, filmService.getFilms(SortParameters.builder().build()).size());
 
         Assertions.assertEquals("film2", filmService.getFilm(1).getName());
     }

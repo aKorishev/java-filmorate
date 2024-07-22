@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.*;
@@ -27,8 +27,8 @@ public class UserService {
         return userStorage.getUser(userId);
     }
 
-    public List<User> getUsers(SortOrder sortOrderName, Optional<Integer> size, Optional<Integer> from) {
-        return userStorage.getUsers(sortOrderName, size, from);
+    public List<User> getUsers(SortParameters parameters) {
+        return userStorage.getUsers(parameters);
     }
 
     public List<User> getUnionFriends(List<Long> userIds) {
@@ -99,10 +99,10 @@ public class UserService {
         }
 
         var user = userStorage.getUser(userId);
-        var userFriends = user.getFriends();
+        var userFriends = new HashSet<>(user.getFriends());
 
         var friend = userStorage.getUser(friendId);
-        var friendFriends = friend.getFriends();
+        var friendFriends = new HashSet<>(friend.getFriends());
 
         if (userFriends.contains(friendId) || friendFriends.contains(userId)) {
             throw new IdIsAlreadyInUseException(String.format("Этот friendId: %d уже был использован", userId));

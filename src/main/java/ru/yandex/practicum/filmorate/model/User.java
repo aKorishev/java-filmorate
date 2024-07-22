@@ -44,6 +44,7 @@ public class User {
     public Set<Long> getFriends() {
         if (friends == null)
             return new HashSet<>();
-        return new HashSet<>(friends);
+
+        return Set.copyOf(friends);
     }
 }

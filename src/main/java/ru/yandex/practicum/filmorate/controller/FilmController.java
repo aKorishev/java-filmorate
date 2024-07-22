@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.List;
@@ -13,16 +13,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    @Autowired
-    private FilmService filmService;
+    private final FilmService filmService;
+
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @GetMapping
     public @ResponseBody List<Film> getFilms() {
-        return filmService.getFilms(
-                SortOrder.UNKNOWN,
-                Optional.empty(),
-                Optional.empty()
-                );
+        return filmService.getFilms(SortParameters.builder().build());
     }
 
     @GetMapping("/{filmId}")
@@ -59,11 +58,11 @@ public class FilmController {
             @RequestParam Optional<Integer> limit,
             @RequestParam Optional<Integer> skip) {
 
-        if (limit.isEmpty()) {
-            limit = Optional.of(10);
-        }
-
-        return filmService.getFilms(SortOrder.DESCENDING, limit, skip);
-        //return filmService.getFilmsToTest();
+        return filmService.getFilms(
+                SortParameters.builder()
+                        .sortOrder(SortOrder.DESCENDING)
+                        .size(limit.orElse(10))
+                        .from(skip)
+                        .build());
     }
 }

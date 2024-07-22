@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public class UserServiceTest {
     @Test
@@ -61,7 +61,12 @@ public class UserServiceTest {
                         .name("user3")
                         .build());
 
-        var users = userService.getUsers(SortOrder.DESCENDING, Optional.of(2), Optional.of(1));
+        var users = userService.getUsers(
+                SortParameters.builder()
+                        .sortOrder(SortOrder.DESCENDING)
+                        .size(2)
+                        .from(1)
+                        .build());
 
         Assertions.assertEquals(2, users.size());
 
@@ -90,7 +95,7 @@ public class UserServiceTest {
 
         userService.deleteUser(2);
 
-        Assertions.assertEquals(2, userService.getUsers(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(2, userService.getUsers(SortParameters.builder().build()).size());
     }
 
     @Test
@@ -131,7 +136,7 @@ public class UserServiceTest {
                         .name("user2")
                         .build());
 
-        Assertions.assertEquals(2, userService.getUsers(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(2, userService.getUsers(SortParameters.builder().build()).size());
     }
 
     @Test
@@ -149,7 +154,7 @@ public class UserServiceTest {
                         .name("user2")
                         .build());
 
-        Assertions.assertEquals(1, userService.getUsers(SortOrder.UNKNOWN, Optional.empty(), Optional.empty()).size());
+        Assertions.assertEquals(1, userService.getUsers(SortParameters.builder().build()).size());
 
         Assertions.assertEquals("user2", userService.getUser(1).getName());
     }

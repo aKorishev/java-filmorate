@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.NonNull;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.model.SortOrder;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface UserStorage {
@@ -18,7 +18,7 @@ public interface UserStorage {
 
     User getUser(long userId);
 
-    public List<User> getUsers(SortOrder sortOrderNames, Optional<Integer> size, Optional<Integer> from);
+    public List<User> getUsers(@NonNull SortParameters parameters);
 
     public List<User> getUsers(Set<Long> ids);
 }

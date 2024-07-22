@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import lombok.NonNull;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.SortOrder;
+import ru.yandex.practicum.filmorate.model.SortParameters;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FilmStorage {
     Film updateFilm(Film film);
@@ -17,5 +17,5 @@ public interface FilmStorage {
 
     Film getFilm(long id);
 
-    List<Film> getFilms(SortOrder sortOrderLikes, Optional<Integer> size, Optional<Integer> from);
+    List<Film> getFilms(@NonNull SortParameters parameters);
 }
