@@ -7,7 +7,12 @@ import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +46,9 @@ public class UserService {
 
             var curFriends = userStorage.getUser(userId).getFriends();
 
-            if (curFriends == null) {
+            log.trace(String.format("getIntersectFriends: userId %d содержит %d друзей", userId, curFriends.size()));
+
+            if (curFriends.isEmpty()) {
                 continue;
             }
 
@@ -60,59 +67,32 @@ public class UserService {
 
         for (var userId: userIds) {
             if (!userStorage.containsKey(userId)) {
-                continue;
-                //throw new NotFoundException(String.format("Этот userId: %d не был найден", userId));
+                throw new NotFoundException(String.format("Этот userId: %d не был найден", userId));
             }
 
             if (friends.isEmpty()) {
                 friends.addAll(userStorage.getUser(userId).getFriends());
+
+                log.trace(String.format("getIntersectFriends: userId %d содержит %d друзей", userId, friends.size()));
             } else {
-                var addingFriends = userStorage
+                var userFriends = userStorage
                         .getUser(userId)
                         .getFriends()
                         .stream()
                         .filter(friends::contains)
                         .collect(Collectors.toSet());
 
-                if (addingFriends.isEmpty()) {
+                if (userFriends.isEmpty()) {
                     return List.of();
                 }
 
-                friends = addingFriends;
+                friends = userFriends;
+
+                log.trace(String.format("getIntersectFriends: пересечние с userId %d сохранило %d друзей", userId, friends.size()));
             }
         }
 
         return userStorage.getUsers(friends);
-    }
-
-    public void addFriend(long userId, long friendId) {
-        if (!userStorage.containsKey(userId)) {
-            throw new NotFoundException(String.format("Этот userId: %d не был найден", userId));
-        }
-
-        if (!userStorage.containsKey(friendId)) {
-            throw new NotFoundException(String.format("Этот friendId: %d не был найден", friendId));
-        }
-
-        if (userId == friendId) {
-            throw new IdIsAlreadyInUseException("Пользователь не должен дружить сам с собой");
-        }
-
-        var user = userStorage.getUser(userId);
-        var userFriends = new HashSet<>(user.getFriends());
-
-        var friend = userStorage.getUser(friendId);
-        var friendFriends = new HashSet<>(friend.getFriends());
-
-        if (userFriends.contains(friendId) || friendFriends.contains(userId)) {
-            throw new IdIsAlreadyInUseException(String.format("Этот friendId: %d уже был использован", userId));
-        }
-
-        userFriends.add(friendId);
-        friendFriends.add(userId);
-
-        userStorage.updateUser(user.toBuilder().friends(userFriends).build());
-        userStorage.updateUser(friend.toBuilder().friends(friendFriends).build());
     }
 
     public User deleteUser(long userId) {
@@ -171,12 +151,29 @@ public class UserService {
         }
 
         var user = userStorage.getUser(userId);
-        user = putFriend(user, friendId);
 
-        var friend = userStorage.getUser(friendId);
-        putFriend(friend, userId);
+        BiFunction<User, Long, User> putFriend = (u, i) -> {
+            var friends = new HashSet<>(u.getFriends());
+            var uId = u.getId();
 
-        return user;
+            if (uId.equals(i) || friends.contains(i))
+                throw new IdIsAlreadyInUseException(String.format("User[%d] уже содержит друга %d", uId, i));
+
+            friends.add(i);
+
+            log.trace(String.format("putFriend: userId %d Добавил друга %d", u.getId(), i));
+
+            return u.toBuilder()
+                    .friends(friends)
+                    .build();
+        };
+
+        var friend = putFriend.apply(userStorage.getUser(friendId), userId);
+        userStorage.updateUser(friend);
+
+        user = putFriend.apply(user, friendId);
+
+        return userStorage.updateUser(user);
     }
 
     public User deleteFriend(long userId, long friendId) {
@@ -188,54 +185,27 @@ public class UserService {
             throw new NotFoundException("Не нашел friendId " + userId);
         }
 
-        var user = userStorage.getUser(userId);
-        var friends = user.getFriends();
+        BiFunction<User, Long, User> deleteFriend = (u, l) -> {
+            var friends = u.getFriends().stream()
+                    .filter(i -> !Objects.equals(i, l))
+                    .collect(Collectors.toSet());
 
-        if (friends == null || !friends.contains(friendId)) {
-            return user;
-        }
+            log.trace(String.format("deleteFriend: userId %d удалил друга %d", u.getId(), l));
 
-        user = deleteFriend(user, friendId);
+            return u.toBuilder()
+                    .friends(friends)
+                    .build();
+        };
 
-        var friend = userStorage.getUser(friendId);
-        deleteFriend(friend, userId);
+        var friend = deleteFriend.apply(
+                userStorage.getUser(friendId),
+                userId);
+        userStorage.updateUser(friend);
 
-        return user;
-    }
+        var user = deleteFriend.apply(
+                userStorage.getUser(userId),
+                friendId);
 
-    private User putFriend(User user, long friendId) {
-        var friends = user.getFriends();
-
-        if (friends == null) {
-            friends = new HashSet<>();
-        } else if (friends.contains(friendId)) {
-            throw new IdIsAlreadyInUseException("Этот friendId " + friendId + " уже используется");
-        }
-
-        friends.add(friendId);
-        user = user.toBuilder().friends(friends).build();
-
-        user = userStorage.updateUser(user);
-
-        log.trace("putFriend: Обновил userid " + user.getId() + ", Login " + user.getLogin() + ", добавил friendId " + friendId);
-
-        return user;
-    }
-
-    private User deleteFriend(User user, long friendId) {
-        var friends = user.getFriends();
-
-        if (friends == null || !friends.contains(friendId)) {
-            throw new NotFoundException("Не нашел friendId " + friendId);
-        }
-
-        friends.remove(friendId);
-        user = user.toBuilder().friends(friends).build();
-
-        user = userStorage.updateUser(user);
-
-        log.trace("deleteFriend: Обновил userid " + user.getId() + ", Login " + user.getLogin() + ", удалил friendId " + friendId);
-
-        return user;
+        return userStorage.updateUser(user);
     }
 }

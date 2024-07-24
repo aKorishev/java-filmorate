@@ -160,7 +160,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void addFriends() {
+    void putFriends() {
         var userService = new UserService(
                 new InMemoryUserStorage());
 
@@ -170,14 +170,14 @@ public class UserServiceTest {
                     .build());
         }
 
-        userService.addFriend(1,2);
+        userService.putFriend(1,2);
 
         Assertions.assertTrue(userService.getUser(1).getFriends().contains(2L));
         Assertions.assertTrue(userService.getUser(2).getFriends().contains(1L));
     }
 
     @Test
-    void getNotFoundUserExceptionAddFriend() {
+    void getNotFoundUserExceptionputFriend() {
         var userService = new UserService(
                 new InMemoryUserStorage());
 
@@ -191,11 +191,11 @@ public class UserServiceTest {
                         .name("user1")
                         .build());
 
-        Assertions.assertThrows(NotFoundException.class, () -> userService.addFriend(3, 2));
+        Assertions.assertThrows(NotFoundException.class, () -> userService.putFriend(3, 2));
     }
 
     @Test
-    void getNotFoundFriendExceptionAddFriend() {
+    void getNotFoundFriendExceptionputFriend() {
         var userService = new UserService(
                 new InMemoryUserStorage());
 
@@ -209,11 +209,11 @@ public class UserServiceTest {
                         .name("user1")
                         .build());
 
-        Assertions.assertThrows(NotFoundException.class, () -> userService.addFriend(1, 3L));
+        Assertions.assertThrows(NotFoundException.class, () -> userService.putFriend(1, 3L));
     }
 
     @Test
-    void getNotFoundUserExceptionAddFriendSelf() {
+    void getNotFoundUserExceptionPutFriendSelf() {
         var userService = new UserService(
                 new InMemoryUserStorage());
 
@@ -222,7 +222,7 @@ public class UserServiceTest {
                         .name("user1")
                         .build());
 
-        Assertions.assertThrows(IdIsAlreadyInUseException.class, () -> userService.addFriend(1, 1));
+        Assertions.assertThrows(IdIsAlreadyInUseException.class, () -> userService.putFriend(1, 1));
     }
 
     @Test
@@ -236,12 +236,12 @@ public class UserServiceTest {
                     .build());
         }
 
-        userService.addFriend(1,3);
-        userService.addFriend(1, 5);
-        userService.addFriend(1, 7);
+        userService.putFriend(1,3);
+        userService.putFriend(1, 5);
+        userService.putFriend(1, 7);
 
-        userService.addFriend(2, 3);
-        userService.addFriend(2, 9);
+        userService.putFriend(2, 3);
+        userService.putFriend(2, 9);
 
         Assertions.assertEquals(4, userService.getUnionFriends(List.of(1L, 2L)).size());
     }
@@ -257,12 +257,12 @@ public class UserServiceTest {
                     .build());
         }
 
-        userService.addFriend(1,3);
-        userService.addFriend(1, 5);
-        userService.addFriend(1, 7);
+        userService.putFriend(1,3);
+        userService.putFriend(1, 5);
+        userService.putFriend(1, 7);
 
-        userService.addFriend(2, 3);
-        userService.addFriend(2, 9);
+        userService.putFriend(2, 3);
+        userService.putFriend(2, 9);
 
         Assertions.assertEquals(1, userService.getIntersectFriends(List.of(1L, 2L)).size());
     }
@@ -282,9 +282,9 @@ public class UserServiceTest {
                         .name("user1")
                         .build());
 
-        userService.addFriend(1,2);
+        userService.putFriend(1,2);
 
-        Assertions.assertThrows(NotFoundException.class, () -> userService.addFriend(3, 2L));
+        Assertions.assertThrows(NotFoundException.class, () -> userService.putFriend(3, 2L));
     }
 
     @Test
@@ -302,9 +302,9 @@ public class UserServiceTest {
                         .name("user1")
                         .build());
 
-        userService.addFriend(1,2);
+        userService.putFriend(1,2);
 
-        Assertions.assertThrows(NotFoundException.class, () -> userService.addFriend(1, 3L));
+        Assertions.assertThrows(NotFoundException.class, () -> userService.putFriend(1, 3L));
     }
 
 

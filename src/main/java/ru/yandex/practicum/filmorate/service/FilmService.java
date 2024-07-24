@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -101,11 +102,10 @@ public class FilmService {
 
         likes.add(userId);
 
-        film = film.toBuilder()
-                .likes(likes)
-                .build();
-
-        postFilm(film);
+        filmStorage.updateFilm(
+                film.toBuilder()
+                        .likes(likes)
+                        .build());
     }
 
     public void disLike(long filmId, long userId) {
@@ -121,12 +121,11 @@ public class FilmService {
             throw new NotFoundException("Лайк от этого пользователя отсутсвует");
         }
 
-        likes.remove(userId);
-
-        film = film.toBuilder()
-                .likes(likes)
-                .build();
-
-        postFilm(film);
+        filmStorage.updateFilm(
+                film.toBuilder()
+                        .likes(likes.stream()
+                                .filter(i -> i != userId)
+                                .collect(Collectors.toSet()))
+                        .build());
     }
 }

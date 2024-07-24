@@ -42,6 +42,6 @@ public class Film {
             return new HashSet<>();
         }
 
-        return new HashSet<>(likes);
+        return Set.copyOf(likes);
     }
 }
