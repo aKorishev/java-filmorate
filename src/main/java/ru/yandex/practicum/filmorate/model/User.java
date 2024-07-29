@@ -3,16 +3,20 @@ package ru.yandex.practicum.filmorate.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
+import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.tool.BirthDateUserConstraint;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Value
+@Builder(toBuilder = true)
+@Validated
 public class User {
-    long id;
+    Long id;
 
     @NotBlank
     @Email
@@ -25,14 +29,22 @@ public class User {
 
     @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    //@JsonDeserialize(using = LocalDateDeserializer.class)
     @BirthDateUserConstraint
     LocalDate birthday;
+
+    Set<Long> friends;
 
     public String getName() {
         if (name == null || name.isBlank())
             return login;
 
         return name;
+    }
+
+    public Set<Long> getFriends() {
+        if (friends == null)
+            return new HashSet<>();
+
+        return Set.copyOf(friends);
     }
 }
