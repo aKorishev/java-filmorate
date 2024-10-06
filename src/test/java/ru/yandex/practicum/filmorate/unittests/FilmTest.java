@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.unittests;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -25,7 +25,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must not be blank",
+                "не должно быть пустым",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -43,7 +43,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must not be blank",
+                "не должно быть пустым",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -63,7 +63,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "size must be between 0 and 200",
+                "размер должен находиться в диапазоне от 0 до 200",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -110,7 +110,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must be greater than or equal to 1",
+                "должно быть не меньше 1",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)

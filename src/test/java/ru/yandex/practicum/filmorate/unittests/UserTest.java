@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.unittests;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -27,7 +27,7 @@ public class UserTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must not be blank",
+                "не должно быть пустым",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -44,8 +44,8 @@ public class UserTest {
 
         validMessages = validMessages
                 .stream()
-                .filter(i -> !i.getMessage().equals("must not be blank"))
-                .filter(i -> !i.getMessage().equals("must be a well-formed email address"))
+                .filter(i -> !i.getMessage().equals("не должно быть пустым"))
+                .filter(i -> !i.getMessage().equals("должно иметь формат адреса электронной почты"))
                 .collect(Collectors.toSet());
 
         Assertions.assertEquals(0, validMessages.size());
@@ -61,7 +61,7 @@ public class UserTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must be a well-formed email address",
+                "должно иметь формат адреса электронной почты",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -84,7 +84,7 @@ public class UserTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must be a well-formed email address",
+                "должно иметь формат адреса электронной почты",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -99,7 +99,7 @@ public class UserTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must be a well-formed email address",
+                "должно иметь формат адреса электронной почты",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -114,7 +114,7 @@ public class UserTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "must be a well-formed email address",
+                "должно иметь формат адреса электронной почты",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -142,7 +142,7 @@ public class UserTest {
 
         validMessages = validMessages
                 .stream()
-                .filter(i -> !(i.getMessage().equals("must not be blank") && i.getPropertyPath().toString().equals("login")))
+                .filter(i -> !(i.getMessage().equals("не должно быть пустым") && i.getPropertyPath().toString().equals("login")))
                 .collect(Collectors.toSet());
 
         Assertions.assertEquals(0, validMessages.size());
@@ -158,7 +158,7 @@ public class UserTest {
 
         validMessages = validMessages
                 .stream()
-                .filter(i -> !(i.getMessage().equals("must not be blank") && i.getPropertyPath().toString().equals("login")))
+                .filter(i -> !(i.getMessage().equals("не должно быть пустым") && i.getPropertyPath().toString().equals("login")))
                 .collect(Collectors.toSet());
 
         Assertions.assertEquals(0, validMessages.size());

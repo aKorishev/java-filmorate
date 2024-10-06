@@ -1,11 +1,11 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.unittests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.SortParameters;
+import ru.yandex.practicum.filmorate.storage.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.inmemorystorage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 
 import java.time.LocalDate;

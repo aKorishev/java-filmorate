@@ -1,6 +1,7 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.storage;
 
 import lombok.*;
+import ru.yandex.practicum.filmorate.model.SortOrder;
 
 import java.util.Optional;
 
@@ -16,6 +17,11 @@ public class SortParameters {
     @NonNull
     @Getter
     private Optional<Integer> from = Optional.empty();
+
+    @Override
+    public String toString() {
+        return String.format("sortOrder - %s, size - %s, from - %s", sortOrder, size.orElse(0), from.orElse(0));
+    }
 
     public static Builder builder() {
         return new SortParameters().new Builder();
