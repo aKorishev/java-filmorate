@@ -25,7 +25,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "не должно быть пустым",
+                "must not be blank",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -43,7 +43,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "не должно быть пустым",
+                "must not be blank",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -63,7 +63,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "размер должен находиться в диапазоне от 0 до 200",
+                "size must be between 0 and 200",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
@@ -110,7 +110,7 @@ public class FilmTest {
         Assertions.assertEquals(1, validMessages.size());
 
         Assertions.assertEquals(
-                "должно быть не меньше 1",
+                "must be greater than or equal to 1",
                 validMessages
                         .stream().findFirst()
                         .map(ConstraintViolation::getMessage)
