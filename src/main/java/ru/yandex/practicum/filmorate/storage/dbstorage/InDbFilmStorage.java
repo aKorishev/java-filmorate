@@ -323,6 +323,7 @@ public class InDbFilmStorage implements FilmStorage {
         var idGenres = genres.stream().map(Genre::getId).collect(Collectors.toSet());
         var currentGenres = new HashSet<>(filmGenresRepository.findGenresByFilmId(filmId));
 
+        //todo добавить пакетную реализацию https://habr.com/ru/articles/703828/
         var idGenresToDelete = currentGenres
                 .stream()
                 .filter(i -> !idGenres.contains(i))
