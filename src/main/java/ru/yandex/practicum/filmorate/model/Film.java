@@ -12,8 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.tool.ReleaseDateFilmConstraint;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Value
 @Validated
@@ -35,13 +34,7 @@ public class Film {
     @Min(1)
     long duration;
 
-    Set<Long> likes;
+    Mpa mpa;
 
-    public Set<Long> getLikes() {
-        if (likes == null) {
-            return new HashSet<>();
-        }
-
-        return Set.copyOf(likes);
-    }
+    List<Genre> genres;
 }

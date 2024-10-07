@@ -1,14 +1,14 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.unittests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.SortOrder;
-import ru.yandex.practicum.filmorate.model.SortParameters;
+import ru.yandex.practicum.filmorate.storage.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.inmemorystorage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -172,8 +172,7 @@ public class UserServiceTest {
 
         userService.putFriend(1,2);
 
-        Assertions.assertTrue(userService.getUser(1).getFriends().contains(2L));
-        Assertions.assertTrue(userService.getUser(2).getFriends().contains(1L));
+        Assertions.assertTrue(userService.getFriends(1).stream().anyMatch(i -> i.getId() == 2L));
     }
 
     @Test

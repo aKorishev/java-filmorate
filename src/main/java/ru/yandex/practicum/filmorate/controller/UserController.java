@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.SortParameters;
+import ru.yandex.practicum.filmorate.storage.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -49,7 +49,7 @@ public class UserController {
 
     @GetMapping("/{userId}/friends")
     public @ResponseBody List<User> getFriends(@PathVariable long userId) {
-        return userService.getUnionFriends(List.of(userId));
+        return userService.getFriends(userId);
     }
 
     @GetMapping("/{userId}/friends/common/{otherUserId}")

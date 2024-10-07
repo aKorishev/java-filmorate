@@ -1,4 +1,15 @@
 spring:
   main:
     log-startup-info: true # выводим служебную информацию
-    banner-mode: off       # не выводим баннер
+    banner-mode: off       # не выводим баннерlogging.level:
+  datasource:
+    #url: jdbc:h2:./db/filmorate
+    url: jdbc:h2:mem:filmorate
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+    jpa.database-platform: org.hibernate.dialect.H2Dialect
+  sql.init:
+    mode: always
+    schema-locations: classpath:schema.sql
+    data-locations: classpath:data.sql

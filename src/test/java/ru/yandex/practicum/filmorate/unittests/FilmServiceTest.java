@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.unittests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -6,14 +6,15 @@ import ru.yandex.practicum.filmorate.exceptions.IdIsAlreadyInUseException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SortOrder;
-import ru.yandex.practicum.filmorate.model.SortParameters;
+import ru.yandex.practicum.filmorate.storage.SortParameters;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.inmemorystorage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.inmemorystorage.InMemoryUserStorage;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.function.Supplier;
+
 
 public class FilmServiceTest {
     @Test
@@ -42,33 +43,53 @@ public class FilmServiceTest {
 
     @Test
     void get2stFilm() {
+        var userStorage = new InMemoryUserStorage();
+        Supplier<Long> getUserId = () ->
+                userStorage.createUser(
+                                User.builder()
+                                        .birthday(LocalDate.of(2000,1,1))
+                                        .build())
+                        .getId();
+
+
+        var user1 = getUserId.get();
+        var user2 = getUserId.get();
+        var user3 = getUserId.get();
+        var user4 = getUserId.get();
+        var user5 = getUserId.get();
+
         var filmService = new FilmService(
                 new InMemoryFilmStorage(),
-                new InMemoryUserStorage());
+                userStorage);
 
-        filmService.postFilm(
-                initFilmBuilder(1)
-                        .name("film1")
-                        .likes(Set.of(1L))
-                        .build());
+        var film =
+                filmService.postFilm(
+                        initFilmBuilder(1)
+                                .name("film1")
+                                .build());
+        filmService.like(film.getId(), user1);
 
         filmService.postFilm(
                 initFilmBuilder(2)
                         .name("film2")
-                        .likes(Set.of())
                         .build());
 
-        filmService.postFilm(
-                initFilmBuilder(3)
-                        .name("film3")
-                        .likes(Set.of(1L, 4L, 5L))
-                        .build());
+        film =
+                filmService.postFilm(
+                        initFilmBuilder(3)
+                                .name("film3")
+                                .build());
+        filmService.like(film.getId(), user1);
+        filmService.like(film.getId(), user4);
+        filmService.like(film.getId(), user5);
 
-        filmService.postFilm(
-                initFilmBuilder(4)
-                        .name("film4")
-                        .likes(Set.of(1L, 4L))
-                        .build());
+        film =
+                filmService.postFilm(
+                        initFilmBuilder(4)
+                                .name("film4")
+                                .build());
+        filmService.like(film.getId(), user1);
+        filmService.like(film.getId(), user4);
 
         var films = filmService.getFilms(
                 SortParameters.builder()
@@ -188,14 +209,14 @@ public class FilmServiceTest {
                         .name("film1")
                         .build());
 
-        Assertions.assertEquals(0, filmService.getFilm(1).getLikes().size(), "Начальное значение");
+        Assertions.assertEquals(0, filmService.getLikes(1).size(), "Начальное значение");
 
         for (int i = 1; i < 100; i++) {
            userStorage.createUser(initUserBuilder(i).build());
 
            filmService.like(1, i);
 
-           Assertions.assertEquals(i, filmService.getFilm(1).getLikes().size());
+           Assertions.assertEquals(i, filmService.getLikes(1).size());
         }
     }
 
@@ -254,7 +275,7 @@ public class FilmServiceTest {
 
         filmService.disLike(1, 1);
 
-        Assertions.assertEquals(1, filmService.getFilm(1).getLikes().size());
+        Assertions.assertEquals(1, filmService.getLikes(1).size());
     }
 
     @Test

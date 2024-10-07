@@ -8,8 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.tool.BirthDateUserConstraint;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Value
@@ -32,19 +30,10 @@ public class User {
     @BirthDateUserConstraint
     LocalDate birthday;
 
-    Set<Long> friends;
-
     public String getName() {
         if (name == null || name.isBlank())
             return login;
 
         return name;
-    }
-
-    public Set<Long> getFriends() {
-        if (friends == null)
-            return new HashSet<>();
-
-        return Set.copyOf(friends);
     }
 }
